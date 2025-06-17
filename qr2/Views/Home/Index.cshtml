@@ -1,4 +1,6 @@
-﻿@model IEnumerable<qr2.Models.TodoItem>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@model IEnumerable<qr2.Models.TodoItem>
+@inject IViewLocalizer Localizer
 
 <h1>ToDo List</h1>
 
@@ -14,7 +16,7 @@
             @item.Title
             @if (!item.IsCompleted)
             {
-                <a asp-action="Complete" asp-route-id="@item.Id">Tamamla</a>
+                <a asp-action="Complete" asp-route-id="@item.Id">@Localizer["Complete"]</a>
             }
             else
             {

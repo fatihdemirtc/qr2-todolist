@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using qr2.Data;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,12 +28,38 @@ builder.Services.AddAuthentication()
     });
 
 // MVC ve Razor Pages
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization();
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
 // Middleware pipeline
+
+var supportedCultures = new[] { "en", "tr", "de", "fr", "es" };
+
+var localizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("en"), 
+    SupportedCultures = supportedCultures.Select(c => new CultureInfo(c)).ToList(),
+    SupportedUICultures = supportedCultures.Select(c => new CultureInfo(c)).ToList()
+};
+
+// Accept-Language header otomatik olarak sýrada en son gelir
+// Eðer QueryString veya Cookie ile override istemiyorsan sadece AcceptLanguage yeterli
+localizationOptions.RequestCultureProviders = new List<IRequestCultureProvider>
+{
+     new CookieRequestCultureProvider(),
+    new AcceptLanguageHeaderRequestCultureProvider(),
+    
+};
+
+app.UseRequestLocalization(localizationOptions);
+
 app.UseStaticFiles();
 app.UseRouting();
 
@@ -41,6 +69,8 @@ app.UseAuthorization();
 // Route mapping
 app.MapDefaultControllerRoute();
 app.MapRazorPages();
+
+
 
 // Migration
 using (var scope = app.Services.CreateScope())
