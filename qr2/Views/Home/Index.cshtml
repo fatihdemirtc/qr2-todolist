@@ -1,0 +1,25 @@
+﻿@model IEnumerable<qr2.Models.TodoItem>
+
+<h1>ToDo List</h1>
+
+<form asp-action="Add" method="post">
+    <input type="text" name="title" placeholder="Yeni görev..." />
+    <button type="submit">Ekle</button>
+</form>
+
+<ul>
+    @foreach (var item in Model)
+    {
+        <li>
+            @item.Title
+            @if (!item.IsCompleted)
+            {
+                <a asp-action="Complete" asp-route-id="@item.Id">Tamamla</a>
+            }
+            else
+            {
+                <span>✔️</span>
+            }
+        </li>
+    }
+</ul>
