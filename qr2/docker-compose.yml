@@ -24,6 +24,7 @@ services:
     container_name: qr2
     environment:
       ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
       ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=mydb;Username=postgres;Password=postgrespw"
     ports:
       - "5000:8080"
