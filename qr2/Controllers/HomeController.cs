@@ -19,8 +19,17 @@ namespace qr2.Controllers
 
         public IActionResult Index()
         {
-            var todos = _context.TodoItems.ToList();
-            return View(todos);
+            int id = 0; 
+            string idStr = Request.Query["productId"];
+            int.TryParse(idStr, out id);
+            string a = _context.TodoItems.FirstOrDefault(x => x.Id == id)?.Title ?? "";
+
+            if(string.IsNullOrEmpty(a))
+            {
+                var todos = _context.TodoItems.ToList();
+                return View(todos);
+            }
+            return Redirect(a);            
         }
 
         [HttpPost]
