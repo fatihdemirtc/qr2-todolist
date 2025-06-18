@@ -23,8 +23,7 @@ namespace qr2.Controllers
         {
             int id = 0; 
             string idStr = Request.Query["productId"];
-            int.TryParse(idStr, out id);
-            string a = _context.TodoItems.FirstOrDefault(x => x.Id == id)?.Title ?? "";
+            string a = _context.Products.FirstOrDefault(x => x.ProductNo == idStr)?.QrContext ?? "";
 
             if(string.IsNullOrEmpty(a))
             {
