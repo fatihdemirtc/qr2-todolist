@@ -24,7 +24,7 @@ namespace qr2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
+                }); 
 
             migrationBuilder.CreateTable(
                 name: "AspNetUsers",
