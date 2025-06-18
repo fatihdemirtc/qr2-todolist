@@ -1,0 +1,31 @@
+﻿@model IEnumerable<qr2.Models.Product>
+
+@{
+    ViewData["Title"] = "My Products";
+}
+
+<h2>My Products</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product No</th>
+            <th>QR Type</th>
+            <th>QR Context</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductNo</td>
+                <td>@item.QrType</td>
+                <td>@item.QrContext</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.RecId">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -56,6 +56,17 @@ namespace qr2.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public IActionResult NewProduct(string title)
+        {
+            if (!string.IsNullOrEmpty(title))
+            {
+                _context.TodoItems.Add(new TodoItem { Title = title, IsCompleted = false });
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
 
         public IActionResult Privacy()
         {

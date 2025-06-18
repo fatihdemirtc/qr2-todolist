@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using qr2.Data;
@@ -11,9 +12,11 @@ using qr2.Data;
 namespace qr2.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250618081906_AddUserProductRelation")]
+    partial class AddUserProductRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -251,15 +254,9 @@ namespace qr2.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("QrContext")
-                        .HasColumnType("text");
-
-                    b.Property<string>("QrType")
-                        .HasColumnType("text");
-
                     b.HasKey("RecId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("qr2.Models.TodoItem", b =>
@@ -289,6 +286,14 @@ namespace qr2.Migrations
 
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("QrContext")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("QrType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "ProductId");
 
