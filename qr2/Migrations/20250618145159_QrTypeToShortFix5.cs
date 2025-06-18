@@ -14,7 +14,7 @@ namespace qr2.Migrations
                 name: "QrType",
                 table: "Products",
                 type: "integer",
-                nullable: true,
+                nullable: true, 
                 oldClrType: typeof(int),
                 oldType: "integer");
 
