@@ -88,7 +88,7 @@ namespace qr2.Controllers
         }
 
         // GET: /Product/Edit/{id}
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(long id)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null) return NotFound();
@@ -98,7 +98,7 @@ namespace qr2.Controllers
         // POST: /Product/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, EditProductViewModel updated)
+        public async Task<IActionResult> Edit(long id, EditProductViewModel updated)
         {
             if (id != updated.RecId) return BadRequest();
 
@@ -111,6 +111,30 @@ namespace qr2.Controllers
             product.QrContext = updated.QrContext;
 
             await _context.SaveChangesAsync();
+            return RedirectToAction("MyProducts");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(long id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+                return NotFound();
+
+            return View(product);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(long id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+                return NotFound();
+
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+
             return RedirectToAction("MyProducts");
         }
     }

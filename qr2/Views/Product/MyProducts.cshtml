@@ -27,6 +27,7 @@
                 <td>@item.QrContext</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.RecId">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.RecId" class="text-danger">Delete</a>
                 </td>
             </tr>
         }

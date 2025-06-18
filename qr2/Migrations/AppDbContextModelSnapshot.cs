@@ -233,29 +233,29 @@ namespace qr2.Migrations
 
             modelBuilder.Entity("qr2.Models.Product", b =>
                 {
-                    b.Property<int>("RecId")
+                    b.Property<long>("RecId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("RecId"));
+
+                    b.Property<int>("ProductNo")
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RecId"));
-
-                    b.Property<string>("ProductNo")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("ProductPassword")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(8)
+                        .HasColumnType("character varying(8)");
 
-                    b.Property<string>("ProductType")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("ProductType")
+                        .HasColumnType("integer");
 
                     b.Property<string>("QrContext")
-                        .HasColumnType("text");
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
-                    b.Property<string>("QrType")
-                        .HasColumnType("text");
+                    b.Property<int?>("QrType")
+                        .HasColumnType("integer");
 
                     b.HasKey("RecId");
 
@@ -287,8 +287,8 @@ namespace qr2.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("UserId", "ProductId");
 

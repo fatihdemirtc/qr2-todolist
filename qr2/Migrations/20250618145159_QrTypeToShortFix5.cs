@@ -5,49 +5,53 @@
 namespace qr2.Migrations
 {
     /// <inheritdoc />
-    public partial class MakeQrContextNullable : Migration
+    public partial class QrTypeToShortFix5 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
+            migrationBuilder.AlterColumn<int>(
                 name: "QrType",
                 table: "Products",
-                type: "text",
+                type: "integer",
                 nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text");
+                oldClrType: typeof(int),
+                oldType: "integer");
 
             migrationBuilder.AlterColumn<string>(
                 name: "QrContext",
                 table: "Products",
-                type: "text",
+                type: "character varying(250)",
+                maxLength: 250,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "text");
+                oldType: "character varying(250)",
+                oldMaxLength: 250);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
+            migrationBuilder.AlterColumn<int>(
                 name: "QrType",
                 table: "Products",
-                type: "text",
+                type: "integer",
                 nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "text",
+                defaultValue: 0,
+                oldClrType: typeof(int),
+                oldType: "integer",
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
                 name: "QrContext",
                 table: "Products",
-                type: "text",
+                type: "character varying(250)",
+                maxLength: 250,
                 nullable: false,
                 defaultValue: "",
                 oldClrType: typeof(string),
-                oldType: "text",
+                oldType: "character varying(250)",
+                oldMaxLength: 250,
                 oldNullable: true);
         }
     }

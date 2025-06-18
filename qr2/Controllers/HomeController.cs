@@ -21,9 +21,10 @@ namespace qr2.Controllers
 
         public IActionResult Index()
         {
-            int id = 0; 
+            long id = 0; 
             string idStr = Request.Query["productId"];
-            string a = _context.Products.FirstOrDefault(x => x.ProductNo == idStr)?.QrContext ?? "";
+            long.TryParse(idStr, out id);
+            string a = _context.Products.FirstOrDefault(x => x.ProductNo == id)?.QrContext ?? "";
 
             if(string.IsNullOrEmpty(a))
             {
