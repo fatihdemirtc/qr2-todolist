@@ -22,7 +22,7 @@ namespace qr2.Migrations
                     ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
-                {
+                { 
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
                 }); 
 
