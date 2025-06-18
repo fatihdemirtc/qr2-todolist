@@ -30,7 +30,8 @@ namespace qr2.Controllers
             {
                 case 1:
                     var bytes = Encoding.UTF8.GetBytes(a.QrContext.ToString());
-                    return File(bytes, "text/vcard", "contact.vcf");                   
+                    Response.Headers.Add("Content-Disposition", "inline; filename=contact.vcf");
+                    return File(bytes, "text/vcard");
                 case 2:
                     if (a != null)
                     {
