@@ -95,7 +95,9 @@ document.getElementById("submitSocialMedia").addEventListener("submit", function
         .then(res => res.ok ? res.json() : Promise.reject("Sunucu hatasý"))
         .then(data => {
             if (data.success) {
-                alert("Link baþarýyla eklendi!");
+                // Modalý kapat ve formu temizle
+                closeSocialMediaModal();
+                location.reload();
             } else {
                 alert("Hata: " + data.error);
             }

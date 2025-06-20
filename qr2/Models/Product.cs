@@ -12,7 +12,7 @@ namespace qr2.Models
 
         [Required]
         [Range(10000000, 99999999, ErrorMessage = "ProductNo must be 8 digits.")]
-        public int ProductNo { get; set; }
+        public long ProductNo { get; set; }
 
         [Required]
         [StringLength(8, MinimumLength = 8, ErrorMessage = "Password must be 8 characters.")]
