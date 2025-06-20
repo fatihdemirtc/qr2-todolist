@@ -29,6 +29,7 @@ namespace qr2.Controllers
             {
                 return Redirect("https://www.youtube.com/shorts/LWSNgcvlEYQ");
             }
+            var ipaddress = Request.HttpContext.Connection.RemoteIpAddress;
 
             Console.WriteLine($"Scanned Product: {GetOS()}, Location: {GetBrowser()}, ip: { Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown IP" }");
 
@@ -40,7 +41,7 @@ namespace qr2.Controllers
                 ScannedDevice = GetOS(),
                 Browser = GetBrowser(),
                 Notes = "",
-                IpAddress = Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown IP"
+                IpAddress = ipaddress.MapToIPv4().ToString() ?? "Unknown IP",
             };
             _context.Scan.Add(scan);
             await _context.SaveChangesAsync();
