@@ -27,7 +27,7 @@ namespace qr2.Controllers
             Product a = _context.Products.FirstOrDefault(x => x.ProductNo == id);
             if (a == null)
             {
-                return View("Error", new ErrorViewModel { RequestId = "Product not found" });
+                return Redirect("https://www.youtube.com/shorts/LWSNgcvlEYQ");
             }
 
             Console.WriteLine($"Scanned Product: {GetOS()}, Location: {GetBrowser()}, ip: { Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown IP" }");
@@ -45,9 +45,7 @@ namespace qr2.Controllers
             _context.Scan.Add(scan);
             await _context.SaveChangesAsync();
 
-           
-
-            return View();
+            return Redirect(a.QrContext);
         }
 
         public int GetOS()
