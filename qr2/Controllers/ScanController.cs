@@ -41,6 +41,8 @@ namespace qr2.Controllers
             _context.Scan.Add(scan);
             await _context.SaveChangesAsync();
 
+            Console.WriteLine($"Scanned Product: {GetOS()}, Location: {GetBrowser()} ");
+
             return View();
         }
 
