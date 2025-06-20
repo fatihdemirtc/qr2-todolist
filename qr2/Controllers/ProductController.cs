@@ -31,49 +31,7 @@ namespace qr2.Controllers
             return View();
         }
 
-        // POST: /Product/Add
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(AddProductViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            var userId = _userManager.GetUserId(User);
-
-            // Ürün var mı?
-            var product = await _context.Products
-                .FirstOrDefaultAsync(p => p.ProductNo == model.ProductNo && p.ProductPassword == model.ProductPassword);
-
-            if (product == null)
-            {
-                // Yeni ürün ekleniyor
-                product = new Product
-                {
-                    ProductNo = model.ProductNo,
-                    ProductPassword = model.ProductPassword,
-                    ProductType = model.ProductType
-                };
-                _context.Products.Add(product);
-                await _context.SaveChangesAsync();
-            }
-
-            // Kullanıcı bu ürünü daha önce eklemiş mi?
-            var exists = await _context.UserProduct
-                .AnyAsync(up => up.UserId == userId && up.ProductId == product.RecId);
-
-            if (!exists)
-            {
-                _context.UserProduct.Add(new UserProduct
-                {
-                    UserId = userId,
-                    ProductId = product.RecId
-                });
-               var a = await _context.SaveChangesAsync();
-            }
-
-            return RedirectToAction("MyProducts");
-        }
+       
 
         public async Task<IActionResult> MyProducts()
         {
