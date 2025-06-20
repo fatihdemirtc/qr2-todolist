@@ -37,7 +37,7 @@ function closeSocialMediaModal() {
 }
 
 
-document.getElementById("addProductForm").addEventListener("submit", function (e) {
+document.getElementById("addProductForm")?.addEventListener("submit", function (e) {
     e.preventDefault();
 
     const form = document.getElementById("addProductForm");
@@ -63,7 +63,7 @@ document.getElementById("addProductForm").addEventListener("submit", function (e
         });
 });
 
-document.getElementById("submitSocialMedia").addEventListener("submit", function (e) {
+document.getElementById("submitSocialMedia")?.addEventListener("submit", function (e) {
     e.preventDefault();
 
     const allInputs = document.getElementById("submitSocialMedia").querySelectorAll(".social-media-links input[type='url']");
@@ -126,6 +126,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+function goToDetail(productNo) {
+    window.location.href = `/home/detail?id=${productNo}`;
+}
+
 
 // Chart Variables
 let viewsChart = null;

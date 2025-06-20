@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace qr2.Models
 {
@@ -26,5 +27,7 @@ namespace qr2.Models
         public int? QrType { get; set; }
 
         public ICollection<UserProduct> UserProducts { get; set; }
+
+        public ICollection<Scan> Scans { get; set; } = new List<Scan>();
     }
 }

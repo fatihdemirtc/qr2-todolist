@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using qr2.Models;
+using System.Reflection.Emit;
 
 namespace qr2.Data
 {
@@ -22,6 +23,12 @@ namespace qr2.Data
                 .HasOne(up => up.Product)
                 .WithMany(p => p.UserProducts)
                 .HasForeignKey(up => up.ProductId);
+
+            builder.Entity<Scan>()
+                .HasOne(s => s.Product)
+                .WithMany(p => p.Scans)
+                .HasForeignKey(s => s.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options) { }
@@ -30,5 +37,7 @@ namespace qr2.Data
 
         public DbSet<Product> Products { get; set; }
         public DbSet<UserProduct> UserProduct { get; set; } = default!;
+
+        public DbSet<Scan> Scan { get; set; }
     }
 }

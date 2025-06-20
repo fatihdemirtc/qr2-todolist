@@ -35,6 +35,12 @@ namespace qr2.Controllers
             return View(new ProductViewModel { Products = userProducts });
         }
 
+        public async Task<IActionResult> Detail(int id)
+        {         
+
+            return View();
+        }
+
         // POST: /Product/Add
         [HttpPost]
         [ValidateAntiForgeryToken]

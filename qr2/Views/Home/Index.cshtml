@@ -15,7 +15,7 @@
     <div class="products-grid">
         @foreach (var item in Model.Products)
         {
-            <div class="product-card" onclick="showProductDetail('Smartphone Pro', 'Electronics', 1234)">
+            <div class="product-card" onclick="goToDetail(@item.RecId)">
                 <div class="product-header">
                     <span class="product-type">@item.ProductType</span>
                     <span class="product-views"><i class="fas fa-eye"></i> 1,234</span>
