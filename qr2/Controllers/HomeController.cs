@@ -37,6 +37,11 @@ namespace qr2.Controllers
 
         public async Task<IActionResult> Detail(int id)
         {         
+            var detail = await _context.Products
+                .Include(p => p.Scans)
+                .Include(p => p.UserProducts)                
+                .ThenInclude(up => up.User)
+                .FirstOrDefaultAsync(p => p.RecId == id);
 
             return View();
         }

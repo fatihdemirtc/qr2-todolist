@@ -1,4 +1,32 @@
 ﻿<div class="product-detail-content">
+    <!-- Action Buttons -->
+    <div class="detail-actions">
+        <button class="btn btn-danger" onclick="deleteCurrentProduct()">
+            <i class="fas fa-trash"></i> Delete
+        </button>
+    </div>
+
+    <!-- QR Code and Social Media Card -->
+    <div class="qr-social-card clickable-card" onclick="showEditSocialModal()">
+        <div class="qr-section">
+            <div class="qr-code">
+                <img id="qrCodeImage" src="https://images.pexels.com/photos/8566473/pexels-photo-8566473.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1" alt="QR Code">
+            </div>
+        </div>
+        <div class="social-section">
+            <div class="social-platform">
+                <i id="socialPlatformIcon" class="fab fa-instagram" style="color: #e4405f;"></i>
+            </div>
+            <div class="social-url">
+                <a id="socialPlatformUrl" href="https://instagram.com/example" target="_blank" onclick="event.stopPropagation()">https://instagram.com/example</a>
+            </div>
+        </div>
+        <div class="edit-indicator">
+            <i class="fas fa-edit"></i>
+            <span>Click to edit</span>
+        </div>
+    </div>
+
     <!-- Stats Cards -->
     <div class="stats-cards">
         <div class="stat-card">
@@ -50,6 +78,77 @@
             <div class="chart-wrapper">
                 <canvas id="osChart"></canvas>
             </div>
+        </div>
+    </div>
+</div>
+<div id="editSocialModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Edit Social Media Link</h3>
+            <button class="close-btn" onclick="closeEditSocialModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="social-media-form">
+                <div class="form-group">
+                    <label for="editSocialPlatformSelect">Select Social Media Platform</label>
+                    <div class="custom-select-wrapper">
+                        <select id="editSocialPlatformSelect" class="platform-select">
+                            <option value="">Choose a platform...</option>
+                            <option value="youtube" data-icon="fab fa-youtube" data-color="#ff0000">YouTube</option>
+                            <option value="instagram" data-icon="fab fa-instagram" data-color="#e4405f">Instagram</option>
+                            <option value="twitter" data-icon="fab fa-twitter" data-color="#1da1f2">Twitter</option>
+                            <option value="facebook" data-icon="fab fa-facebook" data-color="#4267b2">Facebook</option>
+                            <option value="tiktok" data-icon="fab fa-tiktok" data-color="#000000">TikTok</option>
+                            <option value="linkedin" data-icon="fab fa-linkedin" data-color="#2867b2">LinkedIn</option>
+                            <option value="pinterest" data-icon="fab fa-pinterest" data-color="#bd081c">Pinterest</option>
+                        </select>
+                        <div class="select-display">
+                            <span class="select-text">Choose a platform...</span>
+                            <i class="fas fa-chevron-down select-arrow"></i>
+                        </div>
+                        <div class="select-options">
+                            <div class="select-option" data-value="">
+                                <span>Choose a platform...</span>
+                            </div>
+                            <div class="select-option" data-value="youtube" data-icon="fab fa-youtube" data-color="#ff0000">
+                                <i class="fab fa-youtube" style="color: #ff0000;"></i>
+                                <span>YouTube</span>
+                            </div>
+                            <div class="select-option" data-value="instagram" data-icon="fab fa-instagram" data-color="#e4405f">
+                                <i class="fab fa-instagram" style="color: #e4405f;"></i>
+                                <span>Instagram</span>
+                            </div>
+                            <div class="select-option" data-value="twitter" data-icon="fab fa-twitter" data-color="#1da1f2">
+                                <i class="fab fa-twitter" style="color: #1da1f2;"></i>
+                                <span>Twitter</span>
+                            </div>
+                            <div class="select-option" data-value="facebook" data-icon="fab fa-facebook" data-color="#4267b2">
+                                <i class="fab fa-facebook" style="color: #4267b2;"></i>
+                                <span>Facebook</span>
+                            </div>
+                            <div class="select-option" data-value="tiktok" data-icon="fab fa-tiktok" data-color="#000000">
+                                <i class="fab fa-tiktok" style="color: #000000;"></i>
+                                <span>TikTok</span>
+                            </div>
+                            <div class="select-option" data-value="linkedin" data-icon="fab fa-linkedin" data-color="#2867b2">
+                                <i class="fab fa-linkedin" style="color: #2867b2;"></i>
+                                <span>LinkedIn</span>
+                            </div>
+                            <div class="select-option" data-value="pinterest" data-icon="fab fa-pinterest" data-color="#bd081c">
+                                <i class="fab fa-pinterest" style="color: #bd081c;"></i>
+                                <span>Pinterest</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editSocialPlatformUrl">Platform URL</label>
+                    <input type="url" id="editSocialPlatformUrl" placeholder="Enter the URL for the selected platform" disabled>
+                </div>
+            </div>
+            <button class="btn btn-primary confirm-btn" onclick="confirmEditSocial()">Confirm</button>
         </div>
     </div>
 </div>

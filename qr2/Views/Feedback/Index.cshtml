@@ -1,0 +1,50 @@
+﻿<div class="feedback-content">
+    <!-- Feedback Form Section (shown when no history) -->
+    <div id="feedbackFormSection" class="feedback-section">
+        <div class="feedback-card">
+            <div class="feedback-header">
+                <h3>Share Your Feedback</h3>
+                <p>We'd love to hear your thoughts and suggestions to help us improve.</p>
+            </div>
+            <form id="feedbackForm" class="feedback-form">
+                <div class="form-group">
+                    <label for="feedbackMessage">Your Message</label>
+                    <textarea id="feedbackMessage"
+                              placeholder="Please share your feedback, suggestions, or any issues you've encountered..."
+                              rows="8"
+                              required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i>
+                    Submit Feedback
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Feedback History Section (shown when history exists) -->
+    <div id="feedbackHistorySection" class="feedback-section" style="display: none;">
+        <div class="feedback-header">
+            <h3>Your Feedback History</h3>
+            <p>Here are all the feedback messages you've submitted.</p>
+            <button class="btn btn-primary" onclick="showNewFeedbackForm()">
+                <i class="fas fa-plus"></i>
+                Submit New Feedback
+            </button>
+        </div>
+
+        <div class="feedback-table-container">
+            <table class="feedback-table">
+                <thead>
+                    <tr>
+                        <th>Content</th>
+                        <th>Submission Date</th>
+                    </tr>
+                </thead>
+                <tbody id="feedbackTableBody">
+                    <!-- Feedback history will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

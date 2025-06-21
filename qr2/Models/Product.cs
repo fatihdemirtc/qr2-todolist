@@ -11,6 +11,9 @@ namespace qr2.Models
         [Required]
         public int ProductType { get; set; }
 
+        [StringLength(250)]
+        public string? ProductName { get; set; }
+
         [Required]
         [Range(10000000, 99999999, ErrorMessage = "ProductNo must be 8 digits.")]
         public long ProductNo { get; set; }
