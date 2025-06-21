@@ -37,5 +37,7 @@ namespace qr2.Data
         public DbSet<UserProduct> UserProduct { get; set; } = default!;
 
         public DbSet<Scan> Scan { get; set; }
+
+        public DbSet<Feedback> Feedbacks { get; set; }
     }
 }

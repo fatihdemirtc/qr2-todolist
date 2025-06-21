@@ -1,29 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using qr2.Data;
 using qr2.Models;
+using qr2.ViewModel;
 
-namespace qr2.Controllers
+[Authorize]
+public class FeedbackController : Controller
 {
-    public class FeedbackController : Controller
+    private readonly AppDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public FeedbackController(AppDbContext context, UserManager<ApplicationUser> userManager)
     {
-        private readonly AppDbContext _context;
+        _context = context;
+        _userManager = userManager;
+    }
 
-        public FeedbackController(AppDbContext context)
-        {
-            _context = context;
-        }
+    public async Task<IActionResult> Index()
+    {
+        
 
-        // GET: Feedback
-        public async Task<IActionResult> Index()
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Submit(FeedbackViewModel model)
+    {
+        if (!ModelState.IsValid) return View(model);
+
+        var user = await _userManager.GetUserAsync(User);
+        var feedback = new Feedback
         {
-            return View(await _context.Products.ToListAsync());
-        }
-            
+            UserId = user.Id,
+            Message = model.Message,
+            SubmittedAt = DateTime.UtcNow
+        };
+
+        _context.Feedbacks.Add(feedback);
+        await _context.SaveChangesAsync();
+
+        TempData["Success"] = "Thank you for your feedback!";
+        return RedirectToAction("Submit");
     }
 }

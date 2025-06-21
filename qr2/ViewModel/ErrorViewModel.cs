@@ -1,4 +1,4 @@
-namespace qr2.Models
+namespace qr2.ViewModel
 {
     public class ErrorViewModel
     {
