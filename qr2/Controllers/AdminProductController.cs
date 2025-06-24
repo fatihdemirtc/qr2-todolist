@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 namespace qr2.Controllers
 {
     [Authorize]
-    public class ProductController : Controller
+    public class AdminProductController : Controller
     {
         private readonly AppDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProductController(AppDbContext context, UserManager<ApplicationUser> userManager)
+        public AdminProductController(AppDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;

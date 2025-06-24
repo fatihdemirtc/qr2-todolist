@@ -29,6 +29,8 @@ namespace qr2.Models
        
         public int? QrType { get; set; }
 
+        public int? Platform { get; set; }
+
         public ICollection<UserProduct> UserProducts { get; set; }
 
         public ICollection<Scan> Scans { get; set; } = new List<Scan>();

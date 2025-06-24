@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore;
 using qr2.Data;
 using qr2.Models;
@@ -20,15 +21,21 @@ public class FeedbackController : Controller
 
     public async Task<IActionResult> Index()
     {
-        
-
         return View();
+    }
+
+    public async Task<IActionResult> GetFeedbacks()
+    {
+        var userId = _userManager.GetUserId(User);
+        var feedbacks = _context.Feedbacks.AsNoTracking().Where(x => x.UserId == userId);
+
+        return Json(new { success = true });
     }
 
     [HttpPost]
     public async Task<IActionResult> Submit(FeedbackViewModel model)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid) return Json(new { success = false, error = "ModelState" });
 
         var user = await _userManager.GetUserAsync(User);
         var feedback = new Feedback
@@ -41,7 +48,6 @@ public class FeedbackController : Controller
         _context.Feedbacks.Add(feedback);
         await _context.SaveChangesAsync();
 
-        TempData["Success"] = "Thank you for your feedback!";
-        return RedirectToAction("Submit");
+        return Json(new { success = true });
     }
 }

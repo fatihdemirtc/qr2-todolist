@@ -36,14 +36,19 @@ namespace qr2.Controllers
         }
 
         public async Task<IActionResult> Detail(int id)
-        {         
+        {
             var detail = await _context.Products
                 .Include(p => p.Scans)
-                .Include(p => p.UserProducts)                
+                .Include(p => p.UserProducts)
                 .ThenInclude(up => up.User)
-                .FirstOrDefaultAsync(p => p.RecId == id);
+                .FirstOrDefaultAsync(p => p.ProductNo == id);
 
-            return View();
+            return View(new ProductDetailViewModel {
+                ProductNo = detail.ProductNo, 
+                ProductName = detail.ProductName,
+                Platform = detail.Platform.ToString(), // Assuming Platform is an enum or int, convert it to string as needed
+                QrContext = detail.QrContext,
+            });
         }
 
         // POST: /Product/Add
@@ -59,24 +64,18 @@ namespace qr2.Controllers
             // Ürün var mý?
             var product = await _context.Products
                 .FirstOrDefaultAsync(p => p.ProductNo == model.ProductNo && p.ProductPassword == model.ProductPassword);
-
             if (product == null)
             {
-                // Yeni ürün ekleniyor
-                product = new Product
-                {
-                    ProductNo = model.ProductNo,
-                    ProductPassword = model.ProductPassword,
-                    ProductType = model.ProductType
-                };
-                _context.Products.Add(product);
-                await _context.SaveChangesAsync();
+                return Json(new { success = false, error = "ProductionNotFound" });
             }
 
             // Kullanýcý bu ürünü daha önce eklemiþ mi?
             var exists = await _context.UserProduct
                 .AnyAsync(up => up.UserId == userId && up.ProductId == product.RecId);
 
+            //eklememiþ ise bu ürünü bu kullanýcýya da ata
+            //kendisi eklemiþ ise bu ürünü bir daha ekleme
+            //ayný ürünü birden fazla kiþi kullanabilsin
             if (!exists)
             {
                 _context.UserProduct.Add(new UserProduct
@@ -93,20 +92,19 @@ namespace qr2.Controllers
         // POST: /Product/Add
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int ProductNo, string QrContext)
+        public async Task<IActionResult> EditProduct(int ProductNo, string Platform, string QrContext)
         {
             if (!ModelState.IsValid)
-                Json(new { success = false, productNo = ProductNo });
-
-            var userId = _userManager.GetUserId(User);
+                return Json(new { success = false, productNo = ProductNo });
 
             // Ürün var mý?
             var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductNo == ProductNo);
 
             if (product != null)
             {
-                product.QrType = 1;
-                product.QrContext = "https://www.google.com/search?q=" + QrContext;
+                product.Platform = 1; //todo: gelen veriye göre güncellenecek
+                product.QrType = 1; //URL TÝPÝ 1 
+                product.QrContext = QrContext;
                 await _context.SaveChangesAsync();
             }
 

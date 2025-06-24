@@ -5,6 +5,7 @@
     ViewData["Title"] = "My Products";
 }
 
+<!-- Dashboard Content -->
 <div class="dashboard-content">
     <div class="content-header">
         <h3>Products</h3>
@@ -16,41 +17,45 @@
     <div class="products-grid">
         @foreach (var item in Model.Products)
         {
-            <div class="product-card" onclick="goToDetail(@item.RecId)">
+            <div class="product-card" onclick="goToDetail(@item.ProductNo)">
                 <div class="product-header">
-                    <span class="product-type">@item.ProductType</span>
+                    <span class="product-type">@item.ProductNo</span>
                     <span class="product-views"><i class="fas fa-eye"></i> 1,234</span>
                 </div>
-                <h4 class="product-name">@item.ProductNo</h4>
+                <h4 class="product-name">Smartphone Pro</h4>
             </div>
         }
     </div>
-    <div id="addProductModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add New Product</h3>
-                <button class="close-btn" onclick="closeAddProductModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="addProductForm">
-                    <div class="form-group">
-                        <label for="productNumber">Product Number</label>
-                        <input type="text" id="productNumber" placeholder="Enter product number" required maxlength="8">
-                        <div class="validation-message" id="productNumberValidation"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="productPassword">Product Password</label>
-                        <input type="password" id="productPassword" placeholder="Enter product password" required maxlength="8">
-                        <div class="validation-message" id="productPasswordValidation"></div>
-                    </div>
-                    <button type="submit" class="btn btn-primary" id="addProductSubmitBtn" disabled>Submit</button>
-                </form>
-            </div>
+</div>
+
+<div id="addProductModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Add New Product</h3>
+            <button class="close-btn" onclick="closeAddProductModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="addProductForm" method="post">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label for="productNumber">Product Number</label>
+                    <input type="text" id="productNumber" name="ProductNo" placeholder="Enter product number" maxlength="8" required>
+                    <div id="productNumberValidation" class="validation-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="productPassword">Product Password</label>
+                    <input type="password" id="productPassword" name="ProductPassword" placeholder="Enter product password" maxlength="8" required>
+                    <div id="productPasswordValidation" class="validation-message"></div>
+                </div>
+                <button type="submit" id="addProductSubmitBtn" class="btn btn-primary" disabled>Submit</button>
+            </form>
         </div>
     </div>
 </div>
+
+<!-- Social Media Links Modal -->
 <div id="socialMediaModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -60,66 +65,89 @@
             </button>
         </div>
         <div class="modal-body">
-            <div class="social-media-form">
-                <div class="form-group">
-                    <label for="platformSelect">Select Social Media Platform</label>
-                    <div class="custom-select-wrapper">
-                        <select id="platformSelect" class="platform-select">
-                            <option value="">Choose a platform...</option>
-                            <option value="youtube" data-icon="fab fa-youtube" data-color="#ff0000">YouTube</option>
-                            <option value="instagram" data-icon="fab fa-instagram" data-color="#e4405f">Instagram</option>
-                            <option value="twitter" data-icon="fab fa-twitter" data-color="#1da1f2">Twitter</option>
-                            <option value="facebook" data-icon="fab fa-facebook" data-color="#4267b2">Facebook</option>
-                            <option value="tiktok" data-icon="fab fa-tiktok" data-color="#000000">TikTok</option>
-                            <option value="linkedin" data-icon="fab fa-linkedin" data-color="#2867b2">LinkedIn</option>
-                            <option value="pinterest" data-icon="fab fa-pinterest" data-color="#bd081c">Pinterest</option>
-                        </select>
-                        <div class="select-display">
-                            <span class="select-text">Choose a platform...</span>
-                            <i class="fas fa-chevron-down select-arrow"></i>
-                        </div>
-                        <div class="select-options">
-                            <div class="select-option" data-value="">
-                                <span>Choose a platform...</span>
+            <form id="addSocialMediaForm" method="post">
+                @Html.AntiForgeryToken()
+                <div class="social-media-form">
+                    <div class="form-group">
+                        <label for="platformSelect">Select Social Media Platform</label>
+                        <div class="custom-select-wrapper">
+                            <select id="platformSelect" name="Platform" class="platform-select">
+                                <option value="">Choose a platform...</option>
+                                <option value="youtube" data-icon="fab fa-youtube" data-color="#ff0000">YouTube</option>
+                                <option value="instagram" data-icon="fab fa-instagram" data-color="#e4405f">Instagram</option>
+                                <option value="twitter" data-icon="fab fa-twitter" data-color="#1da1f2">Twitter</option>
+                                <option value="facebook" data-icon="fab fa-facebook" data-color="#4267b2">Facebook</option>
+                                <option value="tiktok" data-icon="fab fa-tiktok" data-color="#000000">TikTok</option>
+                                <option value="linkedin" data-icon="fab fa-linkedin" data-color="#2867b2">LinkedIn</option>
+                                <option value="pinterest" data-icon="fab fa-pinterest" data-color="#bd081c">Pinterest</option>
+                            </select>
+                            <div class="select-display">
+                                <span class="select-text">Choose a platform...</span>
+                                <i class="fas fa-chevron-down select-arrow"></i>
                             </div>
-                            <div class="select-option" data-value="youtube" data-icon="fab fa-youtube" data-color="#ff0000">
-                                <i class="fab fa-youtube" style="color: #ff0000;"></i>
-                                <span>YouTube</span>
-                            </div>
-                            <div class="select-option" data-value="instagram" data-icon="fab fa-instagram" data-color="#e4405f">
-                                <i class="fab fa-instagram" style="color: #e4405f;"></i>
-                                <span>Instagram</span>
-                            </div>
-                            <div class="select-option" data-value="twitter" data-icon="fab fa-twitter" data-color="#1da1f2">
-                                <i class="fab fa-twitter" style="color: #1da1f2;"></i>
-                                <span>Twitter</span>
-                            </div>
-                            <div class="select-option" data-value="facebook" data-icon="fab fa-facebook" data-color="#4267b2">
-                                <i class="fab fa-facebook" style="color: #4267b2;"></i>
-                                <span>Facebook</span>
-                            </div>
-                            <div class="select-option" data-value="tiktok" data-icon="fab fa-tiktok" data-color="#000000">
-                                <i class="fab fa-tiktok" style="color: #000000;"></i>
-                                <span>TikTok</span>
-                            </div>
-                            <div class="select-option" data-value="linkedin" data-icon="fab fa-linkedin" data-color="#2867b2">
-                                <i class="fab fa-linkedin" style="color: #2867b2;"></i>
-                                <span>LinkedIn</span>
-                            </div>
-                            <div class="select-option" data-value="pinterest" data-icon="fab fa-pinterest" data-color="#bd081c">
-                                <i class="fab fa-pinterest" style="color: #bd081c;"></i>
-                                <span>Pinterest</span>
+                            <div class="select-options">
+                                <div class="select-option" data-value="">
+                                    <span>Choose a platform...</span>
+                                </div>
+                                <div class="select-option" data-value="youtube" data-icon="fab fa-youtube" data-color="#ff0000">
+                                    <i class="fab fa-youtube" style="color: #ff0000;"></i>
+                                    <span>YouTube</span>
+                                </div>
+                                <div class="select-option" data-value="instagram" data-icon="fab fa-instagram" data-color="#e4405f">
+                                    <i class="fab fa-instagram" style="color: #e4405f;"></i>
+                                    <span>Instagram</span>
+                                </div>
+                                <div class="select-option" data-value="twitter" data-icon="fab fa-twitter" data-color="#1da1f2">
+                                    <i class="fab fa-twitter" style="color: #1da1f2;"></i>
+                                    <span>Twitter</span>
+                                </div>
+                                <div class="select-option" data-value="facebook" data-icon="fab fa-facebook" data-color="#4267b2">
+                                    <i class="fab fa-facebook" style="color: #4267b2;"></i>
+                                    <span>Facebook</span>
+                                </div>
+                                <div class="select-option" data-value="tiktok" data-icon="fab fa-tiktok" data-color="#000000">
+                                    <i class="fab fa-tiktok" style="color: #000000;"></i>
+                                    <span>TikTok</span>
+                                </div>
+                                <div class="select-option" data-value="linkedin" data-icon="fab fa-linkedin" data-color="#2867b2">
+                                    <i class="fab fa-linkedin" style="color: #2867b2;"></i>
+                                    <span>LinkedIn</span>
+                                </div>
+                                <div class="select-option" data-value="pinterest" data-icon="fab fa-pinterest" data-color="#bd081c">
+                                    <i class="fab fa-pinterest" style="color: #bd081c;"></i>
+                                    <span>Pinterest</span>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="platformUrl">Platform URL</label>
+                        <input type="url" id="platformUrl" name="QrContext" placeholder="Enter the URL for the selected platform" disabled>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="platformUrl">Platform URL</label>
-                    <input type="url" id="platformUrl" placeholder="Enter the URL for the selected platform" disabled>
-                </div>
-            </div>
-            <button class="btn btn-primary confirm-btn" onclick="confirmSocialMedia()">Confirm</button>
+                <button class="btn btn-primary confirm-btn" onclick="confirmSocialMedia()">Confirm</button>
+            </form>
         </div>
     </div>
 </div>
-</div>
+
+@section Scripts {
+    <script src="~/bolt/js/dashboard.js"></script>
+    <script src="~/bolt/js/navigation.js"></script>
+    <script src="~/bolt/js/products.js"></script>
+    <script src="~/bolt/js/modals.js"></script>
+    <script src="~/bolt/js/custom-select.js"></script>
+}
+
+<script>
+    // Initialize dashboard page
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeNavigation();
+        initializeDashboard();
+        initializeProducts();
+        initializeModals();
+    });
+    function goToDetail(productNo) {
+        window.location.href = `/home/detail?id=${productNo}`;
+    }
+</script>

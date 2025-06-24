@@ -6,10 +6,12 @@
                 <h3>Share Your Feedback</h3>
                 <p>We'd love to hear your thoughts and suggestions to help us improve.</p>
             </div>
-            <form id="feedbackForm" class="feedback-form">
+            <form id="feedbackForm" class="feedback-form" method="post">
+                @Html.AntiForgeryToken()
                 <div class="form-group">
                     <label for="feedbackMessage">Your Message</label>
                     <textarea id="feedbackMessage"
+                              name="Message"
                               placeholder="Please share your feedback, suggestions, or any issues you've encountered..."
                               rows="8"
                               required></textarea>
@@ -48,3 +50,17 @@
         </div>
     </div>
 </div>
+
+
+@section Scripts {
+    <script src="~/bolt/js/navigation.js"></script>
+    <script src="~/bolt/js/feedback.js"></script>
+}
+
+<script>
+    // Initialize feedback page
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeNavigation();
+        initializeFeedback();
+    });
+</script>
