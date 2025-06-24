@@ -18,26 +18,39 @@ function showAdminFeedback() {
     updateSidebarActiveState('admin-feedback');
 }
 
-// Feedback System
-let feedbackHistory = JSON.parse(localStorage.getItem('feedbackHistory')) || [];
 
 function initializeFeedbackDisplay() {
     const formSection = document.getElementById('feedbackFormSection');
     const historySection = document.getElementById('feedbackHistorySection');
-    
-    if (feedbackHistory.length === 0) {
-        // Show form, hide history
-        formSection.style.display = 'block';
-        historySection.style.display = 'none';
-    } else {
-        // Show history, hide form
-        formSection.style.display = 'none';
-        historySection.style.display = 'block';
-        
-        // Populate feedback history table
-        populateFeedbackTable();
-    }
+    const tableBody = document.getElementById('feedbackTableBody');
+
+    fetch('/Feedback/GetFeedbacks')
+        .then(response => response.ok ? response.json() : Promise.reject("Veri alınamadı"))
+        .then(data => {
+            if (data.length === 0) {
+                formSection.style.display = 'block';
+                historySection.style.display = 'none';
+            } else {
+                formSection.style.display = 'none';
+                historySection.style.display = 'block';
+
+                tableBody.innerHTML = '';
+                data.forEach(feedback => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="feedback-content">${feedback.content}</td>
+                        <td class="feedback-date">${feedback.date}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Feedback geçmişi getirilemedi.");
+        });
 }
+
 
 function populateFeedbackTable() {
     const tableBody = document.getElementById('feedbackTableBody');
@@ -53,7 +66,7 @@ function populateFeedbackTable() {
     });
 }
 
-function submitFeedback(message) {
+function submitFeedback() {
 
     const form = document.getElementById("feedbackForm");
     const formData = new FormData(form); // token da dahil
@@ -64,8 +77,12 @@ function submitFeedback(message) {
     })
         .then(response => response.ok ? response.json() : Promise.reject("Sunucu hatas�"))
         .then(data => {
-            if (data.success) {
-                closeSocialMediaModal();
+            if (data.success) {      
+                // Show success message
+                alert('Thank you for your feedback! Your message has been submitted successfully.');
+
+                // Refresh the feedback display
+                initializeFeedbackDisplay();
             } else {
                 alert("Error: " + data.error);
             }
@@ -74,41 +91,6 @@ function submitFeedback(message) {
             console.error(err);
             alert("Couldnt send");
         });       
-
-
-    const feedback = {
-        content: message,
-        date: new Date().toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        }),
-        timestamp: Date.now()
-    };
-
-
-    
-    feedbackHistory.unshift(feedback); // Add to beginning of array
-    localStorage.setItem('feedbackHistory', JSON.stringify(feedbackHistory));
-    
-    // Show success message
-    alert('Thank you for your feedback! Your message has been submitted successfully.');
-    
-    // Refresh the feedback display
-    initializeFeedbackDisplay();
-}
-
-function showNewFeedbackForm() {
-    const modal = document.getElementById('newFeedbackModal');
-    modal.classList.add('show');
-}
-
-function closeNewFeedbackModal() {
-    const modal = document.getElementById('newFeedbackModal');
-    modal.classList.remove('show');
-    document.getElementById('newFeedbackForm').reset();
 }
 
 // Admin Feedback Functions

@@ -4,6 +4,7 @@ namespace qr2.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public ICollection<UserProduct> UserProducts { get; set; }
+        public ICollection<UserProduct> UserProducts { get; set; }       
+
     }
 }

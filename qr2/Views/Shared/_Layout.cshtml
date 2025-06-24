@@ -20,14 +20,20 @@
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="/Home/Index" class="active"><i class="fas fa-home"></i> Products</a></li>
-                    <li><a href="/Feedback/Index"><i class="fas fa-comment"></i> Feedback</a></li>
-                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                    @if (User.IsInRole("admin"))
+                    {
+                        <li><a href="@Url.Action("Index", "AdminHome")"><i class="fas fa-users"></i>Home</a></li>
+                        <li><a href="@Url.Action("Index", "AdminUsers")"><i class="fas fa-users"></i>Users</a></li>
+                        <li><a href="@Url.Action("Index", "AdminProduct")"><i class="fas fa-users"></i>Products</a></li>
+                        <li><a href="@Url.Action("Index", "AdminFeedback")"><i class="fas fa-users"></i>Feedback</a></li>
+                    }
+                    @if (User.IsInRole("user"))
+                    {
 
-
-                    <li><a href="#"><i class="fas fa-users"></i> Admin-Users</a></li>
-                    <li><a href="#"><i class="fas fa-users"></i> Admin-Products</a></li>
-                    <li><a href="#"><i class="fas fa-users"></i> Admin-Feedback</a></li>
+                        <li><a href="@Url.Action("Index", "Home")" class="@Html.IsActive("Home")"><i class="fas fa-home"></i> Products</a></li>
+                        <li><a href="@Url.Action("Index", "Feedback")" class="@Html.IsActive("Feedback")"><i class="fas fa-comment"></i> Feedback</a></li>
+                        <li><a href="@Url.Action("Index", "Settings")" class="@Html.IsActive("Settings")"><i class="fas fa-cog"></i> Settings</a></li>
+                    }
                 </ul>
             </nav>
         </div>

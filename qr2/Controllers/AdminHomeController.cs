@@ -4,94 +4,93 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using qr2.Data;
 using qr2.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace qr2.Controllers
 {
     [Authorize(Roles = "admin")]
-    public class AdminFeedbackController : Controller
+    public class AdminHomeController : Controller
     {
         private readonly AppDbContext _context;
 
-        public AdminFeedbackController(AppDbContext context)
+        public AdminHomeController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: AdminFeedback
+        // GET: AdminHome
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Feedbacks.Include(f => f.User);
-            return View(await appDbContext.ToListAsync());
+            return View(await _context.Products.ToListAsync());
         }
 
-        // GET: AdminFeedback/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: AdminHome/Details/5
+        public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var feedback = await _context.Feedbacks
-                .Include(f => f.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (feedback == null)
+            var product = await _context.Products
+                .FirstOrDefaultAsync(m => m.RecId == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(feedback);
+            return View(product);
         }
 
-        // GET: AdminFeedback/Create
+        // GET: AdminHome/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id");
             return View();
         }
 
-        // POST: AdminFeedback/Create
+        // POST: AdminHome/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,Message,SubmittedAt")] Feedback feedback)
+        public async Task<IActionResult> Create([Bind("RecId,ProductType,ProductName,ProductNo,ProductPassword,QrContext,QrType,Platform")] Product product)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(feedback);
+                _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", feedback.UserId);
-            return View(feedback);
+            return View(product);
         }
 
-        // GET: AdminFeedback/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: AdminHome/Edit/5
+        public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var feedback = await _context.Feedbacks.FindAsync(id);
-            if (feedback == null)
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", feedback.UserId);
-            return View(feedback);
+            return View(product);
         }
 
-        // POST: AdminFeedback/Edit/5
+        // POST: AdminHome/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,Message,SubmittedAt")] Feedback feedback)
+        public async Task<IActionResult> Edit(long id, [Bind("RecId,ProductType,ProductName,ProductNo,ProductPassword,QrContext,QrType,Platform")] Product product)
         {
-            if (id != feedback.Id)
+            if (id != product.RecId)
             {
                 return NotFound();
             }
@@ -100,12 +99,12 @@ namespace qr2.Controllers
             {
                 try
                 {
-                    _context.Update(feedback);
+                    _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FeedbackExists(feedback.Id))
+                    if (!ProductExists(product.RecId))
                     {
                         return NotFound();
                     }
@@ -116,47 +115,45 @@ namespace qr2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", feedback.UserId);
-            return View(feedback);
+            return View(product);
         }
 
-        // GET: AdminFeedback/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: AdminHome/Delete/5
+        public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var feedback = await _context.Feedbacks
-                .Include(f => f.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (feedback == null)
+            var product = await _context.Products
+                .FirstOrDefaultAsync(m => m.RecId == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(feedback);
+            return View(product);
         }
 
-        // POST: AdminFeedback/Delete/5
+        // POST: AdminHome/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var feedback = await _context.Feedbacks.FindAsync(id);
-            if (feedback != null)
+            var product = await _context.Products.FindAsync(id);
+            if (product != null)
             {
-                _context.Feedbacks.Remove(feedback);
+                _context.Products.Remove(product);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool FeedbackExists(int id)
+        private bool ProductExists(long id)
         {
-            return _context.Feedbacks.Any(e => e.Id == id);
+            return _context.Products.Any(e => e.RecId == id);
         }
     }
 }

@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace qr2.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "user")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

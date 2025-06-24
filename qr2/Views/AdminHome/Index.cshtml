@@ -1,0 +1,83 @@
+﻿@model IEnumerable<qr2.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductPassword)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QrContext)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QrType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Platform)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductPassword)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QrContext)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QrType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Platform)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.RecId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.RecId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.RecId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+@section Scripts {
+    <script src="~/bolt/js/navigation.js"></script>
+    <script src="~/bolt/js/feedback.js"></script>
+}
+
+<script>
+    // Initialize feedback page
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeNavigation();
+        initializeFeedback();
+    });
+</script>

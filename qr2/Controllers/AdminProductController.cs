@@ -1,19 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using qr2.Data;
 using qr2.Models;
 using qr2.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace qr2.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "admin")]    
     public class AdminProductController : Controller
     {
         private readonly AppDbContext _context;

@@ -16,7 +16,7 @@
                               rows="8"
                               required></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">
+                <button type="button" class="btn btn-primary" onclick="submitFeedback()">
                     <i class="fas fa-paper-plane"></i>
                     Submit Feedback
                 </button>
@@ -29,7 +29,7 @@
         <div class="feedback-header">
             <h3>Your Feedback History</h3>
             <p>Here are all the feedback messages you've submitted.</p>
-            <button class="btn btn-primary" onclick="showNewFeedbackForm()">
+            <button class="btn btn-primary" onclick="location.reload()">
                 <i class="fas fa-plus"></i>
                 Submit New Feedback
             </button>
@@ -61,6 +61,6 @@
     // Initialize feedback page
     document.addEventListener('DOMContentLoaded', function() {
         initializeNavigation();
-        initializeFeedback();
+        
     });
 </script>

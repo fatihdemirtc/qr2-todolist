@@ -7,7 +7,7 @@ using qr2.Data;
 using qr2.Models;
 using qr2.ViewModel;
 
-[Authorize]
+[Authorize(Roles = "user")]
 public class FeedbackController : Controller
 {
     private readonly AppDbContext _context;
@@ -27,9 +27,16 @@ public class FeedbackController : Controller
     public async Task<IActionResult> GetFeedbacks()
     {
         var userId = _userManager.GetUserId(User);
-        var feedbacks = _context.Feedbacks.AsNoTracking().Where(x => x.UserId == userId);
+        var feedbacks = await _context.Feedbacks
+        .Where(f => f.UserId == userId)
+        .OrderByDescending(f => f.SubmittedAt)
+        .Select(f => new {
+            content = f.Message,
+            date = f.SubmittedAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm")
+        })
+        .ToListAsync();
 
-        return Json(new { success = true });
+        return Json(feedbacks);
     }
 
     [HttpPost]
