@@ -9,10 +9,12 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using qr2.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,13 +25,25 @@ namespace qr2.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, 
+            ILogger<LoginModel> logger, 
+            UserManager<ApplicationUser> userManager,
+            IHttpClientFactory httpClientFactory,
+            IConfiguration configuration
+        )
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
+            _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
         }
+
+        [BindProperty]
+        public string RecaptchaToken { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -112,6 +126,13 @@ namespace qr2.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+
+                if (!await IsRecaptchaValid(RecaptchaToken))
+                {
+                    ModelState.AddModelError(string.Empty, "reCAPTCHA is inValid");
+                    return Page();
+                }
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
@@ -147,6 +168,21 @@ namespace qr2.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        private async Task<bool> IsRecaptchaValid(string token)
+        {
+            var secret = _configuration["GoogleReCaptcha:SecretKey"];
+            var client = _httpClientFactory.CreateClient();
+            var response = await client.PostAsync(
+                $"https://www.google.com/recaptcha/api/siteverify?secret={secret}&response={token}",
+                null
+            );
+
+            var json = await response.Content.ReadAsStringAsync();
+            dynamic result = JsonConvert.DeserializeObject(json);
+
+            return result.success == true && result.score >= 0.5;
         }
     }
 }

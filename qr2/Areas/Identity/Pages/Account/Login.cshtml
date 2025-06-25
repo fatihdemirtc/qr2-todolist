@@ -41,7 +41,7 @@
                     <div>
                         <button type="submit" class="w-100 btn btn-lg btn-primary">Sign In</button>
                     </div>
-
+                    <input type="hidden" id="recaptchaToken" name="recaptchaToken" />
                 </form>
 
                 <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
@@ -62,5 +62,13 @@
             </div>
         </div>
     </div>
+    <script src="https://www.google.com/recaptcha/api.js?render=6Ldi0mwrAAAAABRCnmRky5OkNDEA5Xa5eyp0bK3c"></script>
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute('6Ldi0mwrAAAAABRCnmRky5OkNDEA5Xa5eyp0bK3c', { action: 'login' }).then(function (token) {
+                document.getElementById('recaptchaToken').value = token;
+            });
+        });
+    </script>
 </body>
 </html>

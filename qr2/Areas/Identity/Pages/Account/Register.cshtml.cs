@@ -10,11 +10,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using qr2.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
@@ -30,12 +32,16 @@ namespace qr2.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
+             IHttpClientFactory httpClientFactory,
+            IConfiguration configuration,
             IEmailSender emailSender)
         {
             _userManager = userManager;
@@ -44,8 +50,12 @@ namespace qr2.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
         }
 
+        [BindProperty]
+        public string RecaptchaToken { get; set; }
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -113,6 +123,12 @@ namespace qr2.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                if (!await IsRecaptchaValid(RecaptchaToken))
+                {
+                    ModelState.AddModelError(string.Empty, "reCAPTCHA is inValid");
+                    return Page();
+                }
+
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
@@ -178,6 +194,21 @@ namespace qr2.Areas.Identity.Pages.Account
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
             return (IUserEmailStore<ApplicationUser>)_userStore;
+        }
+
+        private async Task<bool> IsRecaptchaValid(string token)
+        {
+            var secret = _configuration["GoogleReCaptcha:SecretKey"];
+            var client = _httpClientFactory.CreateClient();
+            var response = await client.PostAsync(
+                $"https://www.google.com/recaptcha/api/siteverify?secret={secret}&response={token}",
+                null
+            );
+
+            var json = await response.Content.ReadAsStringAsync();
+            dynamic result = JsonConvert.DeserializeObject(json);
+
+            return result.success == true && result.score >= 0.5;
         }
     }
 }

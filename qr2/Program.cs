@@ -39,6 +39,8 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 
 builder.Services.AddRazorPages();
 
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
 
 // Middleware pipeline
