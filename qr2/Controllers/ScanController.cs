@@ -4,6 +4,7 @@ using NuGet.Protocol.Core.Types;
 using qr2.Data;
 using qr2.Models;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 
@@ -11,11 +12,15 @@ namespace qr2.Controllers
 {
     public class ScanController : Controller
     {
+        private readonly HttpClient _httpClient;
+        private const string ApiKey = "c880a64ef2ef97b32bd154fc8810dea6";
         private readonly AppDbContext _context;
 
-        public ScanController(AppDbContext context)
+        public ScanController(AppDbContext context, HttpClient httpClient)
+
         {
             _context = context;
+            _httpClient = httpClient;
         }
 
         public async Task<IActionResult> Index()
@@ -31,7 +36,19 @@ namespace qr2.Controllers
             }
             var ipaddress = Request.HttpContext.Connection.RemoteIpAddress;
 
-            Console.WriteLine($"Scanned Product: {GetOS()}, Location: {GetBrowser()}, ip: { Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown IP" }");
+            Console.WriteLine($"Scanned Product: {GetOS()}, Location: {GetBrowser()}, ip: {Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown IP"}");
+
+            //ipden lokasyon bilgisi al
+            var url = $"https://api.ipapi.com/api/{ipaddress.MapToIPv4().ToString()}?access_key={ApiKey}&fields=ip,city,region_name,country_name,latitude,longitude,timezone";
+
+            var response = await _httpClient.GetAsync(url);
+            if (!response.IsSuccessStatusCode)
+                return StatusCode((int)response.StatusCode, "ipapi servisi başarısız");
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(content);
+
 
             Scan scan = new Scan
             {
