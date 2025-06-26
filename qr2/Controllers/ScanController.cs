@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using NuGet.Protocol.Core.Types;
 using qr2.Data;
 using qr2.Models;
@@ -46,7 +47,6 @@ namespace qr2.Controllers
 
             GetBrowserandOS(scan, Request);
 
-
             //ipden lokasyon bilgisi al
             var url = $"https://api.ipapi.com/api/{ipaddress.MapToIPv4().ToString()}?access_key={ApiKey}";
 
@@ -55,10 +55,14 @@ namespace qr2.Controllers
                 return StatusCode((int)response.StatusCode, "ipapi servisi başarısız");
 
             var content = await response.Content.ReadAsStringAsync();
+            Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(content);
+
+            scan.Location = myDeserializedClass.city ?? "Unknown City";
+            scan.Country = myDeserializedClass.country_name ?? "Unknown Country";
+            scan.City = myDeserializedClass.city ?? "Unknown City";
+
 
             Console.WriteLine(content);
-
-
 
             _context.Scan.Add(scan);
             await _context.SaveChangesAsync();
@@ -74,15 +78,78 @@ namespace qr2.Controllers
 
             string browser = $"{c.UA.Family} {c.UA.Major}";
             string os = $"{c.OS.Family} {c.OS.Major}";
-            string device = c.Device.Family;
 
-            Console.WriteLine($"Browserx: {browser}, OSx: {os}, Device: {device}");
+            if (os.Contains("Windows") || os.Contains("windows") || os.Contains("10"))
+            {
+                scan.ScannedDevice = 1;
+            }
+            else if (os.Contains("Mac") || os.Contains("mac"))
+            {
+                scan.ScannedDevice = 3;
+            }
+            else if (os.Contains("Linux") || os.Contains("linux"))
+            {
+                scan.ScannedDevice = 4;
+            }
+            else if (os.Contains("Android") || os.Contains("android"))
+            {
+                scan.ScannedDevice = 5;
+            }
+            else if (os.Contains("iOS") || os.Contains("ios"))
+            {
+                scan.ScannedDevice = 6;
+            }
 
             scan.Browser = browser;
-            //scan.ScannedDevice = os; // OS olarak kaydediyoruz, isterseniz device da ekleyebilirsiniz
-            scan.Browser = device;
+
+            Console.WriteLine($"Browserx: {browser}, OSx: {os}");
+
         }
 
 
     }
+
+   
+    public class Language
+    {
+        public string code { get; set; }
+        public string name { get; set; }
+        public string native { get; set; }
+    }
+
+    public class Location
+    {
+        public int geoname_id { get; set; }
+        public string capital { get; set; }
+        public List<Language> languages { get; set; }
+        public string country_flag { get; set; }
+        public string country_flag_emoji { get; set; }
+        public string country_flag_emoji_unicode { get; set; }
+        public string calling_code { get; set; }
+        public bool is_eu { get; set; }
+    }
+
+    public class Root
+    {
+        public string ip { get; set; }
+        public string type { get; set; }
+        public string continent_code { get; set; }
+        public string continent_name { get; set; }
+        public string country_code { get; set; }
+        public string country_name { get; set; }
+        public string region_code { get; set; }
+        public string region_name { get; set; }
+        public string city { get; set; }
+        public string zip { get; set; }
+        public double latitude { get; set; }
+        public double longitude { get; set; }
+        public object msa { get; set; }
+        public object dma { get; set; }
+        public string radius { get; set; }
+        public string ip_routing_type { get; set; }
+        public string connection_type { get; set; }
+        public Location location { get; set; }
+    }
+
+
 }
