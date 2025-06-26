@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Connection string al
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+Console.WriteLine("🔍 Final ConnectionString: " + connectionString); // EKLE BUNU
+
 
 // DbContext ekle
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -54,8 +57,8 @@ var localizationOptions = new RequestLocalizationOptions
     SupportedUICultures = supportedCultures.Select(c => new CultureInfo(c)).ToList()
 };
 
-// Accept-Language header otomatik olarak s�rada en son gelir
-// E�er QueryString veya Cookie ile override istemiyorsan sadece AcceptLanguage yeterli
+// Accept-Language header otomatik olarak sırada en son gelir
+// Eğer QueryString veya Cookie ile override istemiyorsan sadece AcceptLanguage yeterli
 localizationOptions.RequestCultureProviders = new List<IRequestCultureProvider>
 {
      new CookieRequestCultureProvider(),
