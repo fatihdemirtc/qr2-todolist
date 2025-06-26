@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using UAParser;
 
 namespace qr2.Controllers
 {
@@ -36,7 +37,15 @@ namespace qr2.Controllers
             }
             var ipaddress = Request.HttpContext.Connection.RemoteIpAddress;
 
-            Console.WriteLine($"Scanned Product: {GetOS()}, Location: {GetBrowser()}, ip: {Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown IP"}");
+            Scan scan = new Scan()
+            {
+                ProductId = a.RecId,
+                ScannedAt = DateTime.UtcNow,
+                IpAddress = ipaddress.MapToIPv4().ToString() ?? "Unknown IP",
+            };
+
+            GetBrowserandOS(scan, Request);
+
 
             //ipden lokasyon bilgisi al
             var url = $"https://api.ipapi.com/api/{ipaddress.MapToIPv4().ToString()}?access_key={ApiKey}";
@@ -50,45 +59,30 @@ namespace qr2.Controllers
             Console.WriteLine(content);
 
 
-            Scan scan = new Scan
-            {
-                ProductId = a.RecId,
-                Location = "unknown",
-                ScannedAt = DateTime.UtcNow,
-                ScannedDevice = GetOS(),
-                Browser = GetBrowser(),
-                Notes = "",
-                IpAddress = ipaddress.MapToIPv4().ToString() ?? "Unknown IP",
-            };
+
             _context.Scan.Add(scan);
             await _context.SaveChangesAsync();
 
             return Redirect(a.QrContext);
         }
 
-        public int GetOS()
+        private void GetBrowserandOS(Scan scan, HttpRequest request)
         {
-            string userAgent = Request.Headers["User-Agent"];
-            var ua = userAgent.ToLower();
+            var userAgent = request.Headers["User-Agent"].ToString();
+            var parser = Parser.GetDefault();
+            ClientInfo c = parser.Parse(userAgent);
 
-            int os = 0;
-            if (ua.Contains("windows")) os = 1;
-            else if (ua.Contains("mac")) os = 2;
-            else if (ua.Contains("linux")) os = 3;
-            else if (ua.Contains("android")) os = 4;
-            else if (ua.Contains("iphone")) os = 5;
-            return os;
+            string browser = $"{c.UA.Family} {c.UA.Major}";
+            string os = $"{c.OS.Family} {c.OS.Major}";
+            string device = c.Device.Family;
+
+            Console.WriteLine($"Browserx: {browser}, OSx: {os}, Device: {device}");
+
+            scan.Browser = browser;
+            //scan.ScannedDevice = os; // OS olarak kaydediyoruz, isterseniz device da ekleyebilirsiniz
+            scan.Browser = device;
         }
 
-        public string GetBrowser()
-        {
-            string ua = Request.Headers["User-Agent"];
-            string browser = "Unknown Browser";
-            if (ua.Contains("chrome")) browser = "Chrome";
-            else if (ua.Contains("firefox")) browser = "Firefox";
-            else if (ua.Contains("safari") && !ua.Contains("chrome")) browser = "Safari";
-            else if (ua.Contains("edge")) browser = "Edge";
-            return browser;
-        }
+
     }
 }
