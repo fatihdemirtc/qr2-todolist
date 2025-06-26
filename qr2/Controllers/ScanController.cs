@@ -39,7 +39,7 @@ namespace qr2.Controllers
             Console.WriteLine($"Scanned Product: {GetOS()}, Location: {GetBrowser()}, ip: {Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown IP"}");
 
             //ipden lokasyon bilgisi al
-            var url = $"https://api.ipapi.com/api/{ipaddress.MapToIPv4().ToString()}?access_key={ApiKey}&fields=ip,city,region_name,country_name,latitude,longitude,timezone";
+            var url = $"https://api.ipapi.com/api/{ipaddress.MapToIPv4().ToString()}?access_key={ApiKey}";
 
             var response = await _httpClient.GetAsync(url);
             if (!response.IsSuccessStatusCode)
