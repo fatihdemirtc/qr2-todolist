@@ -86,7 +86,7 @@ namespace qr2.Controllers
             string browser = $"{c.UA.Family} {c.UA.Major}";
             string os = $"{c.OS.Family} {c.OS.Major}";
 
-            if (os.Contains("Windows") || os.Contains("windows") || os.Contains("10"))
+            if (os.Contains("Windows") || os.Contains("windows"))
             {
                 scan.ScannedDevice = 1;
             }
