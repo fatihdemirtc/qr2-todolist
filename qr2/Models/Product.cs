@@ -1,4 +1,5 @@
-﻿using System;
+﻿using qr2.Enum;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace qr2.Models
@@ -29,7 +30,7 @@ namespace qr2.Models
        
         public int? QrType { get; set; }
 
-        public int? Platform { get; set; }
+        public PlatformType? Platform { get; set; }
 
         public ICollection<UserProduct> UserProducts { get; set; }
 

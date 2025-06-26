@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using qr2.Data;
+using qr2.Enum;
 using qr2.Models;
 using qr2.ViewModel;
 using System.Diagnostics;
@@ -38,16 +39,40 @@ namespace qr2.Controllers
         public async Task<IActionResult> Detail(int id)
         {
             var detail = await _context.Products
-                .Include(p => p.Scans)
-                .Include(p => p.UserProducts)
-                .ThenInclude(up => up.User)
-                .FirstOrDefaultAsync(p => p.ProductNo == id);
+         .Include(p => p.Scans)
+         .FirstOrDefaultAsync(p => p.ProductNo == id);
 
-            return View(new ProductDetailViewModel {
-                ProductNo = detail.ProductNo, 
+            if (detail == null)
+                return NotFound();
+
+            var now = DateTime.UtcNow.Date;
+            var last30Days = Enumerable.Range(0, 30)
+                .Select(i => now.AddDays(-i))
+                .ToList();
+
+            var scansLast30Days = detail.Scans
+                .Where(s => s.ScannedAt.Date >= now.AddDays(-29))
+                .GroupBy(s => s.ScannedAt.Date)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            var dailyScans = last30Days
+                .OrderBy(d => d)
+                .Select(date => new DailyScanDto
+                {
+                    Date = date,
+                    ScanCount = scansLast30Days.ContainsKey(date) ? scansLast30Days[date] : 0
+                })
+                .ToList();
+
+            return View(new ProductDetailViewModel
+            {
+                ProductNo = detail.ProductNo,
                 ProductName = detail.ProductName,
-                Platform = detail.Platform.ToString(), // Assuming Platform is an enum or int, convert it to string as needed
+                Platform = detail.Platform ?? 0,
                 QrContext = detail.QrContext,
+                TotalScans = detail.Scans.Count,
+                UniqueScans = detail.Scans.Select(s => s.IpAddress).Distinct().Count(),
+                DailyScans = dailyScans
             });
         }
 
@@ -92,7 +117,7 @@ namespace qr2.Controllers
         // POST: /Product/Add
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProduct(int ProductNo, string Platform, string QrContext)
+        public async Task<IActionResult> EditProduct(int ProductNo, PlatformType Platform, string QrContext)
         {
             if (!ModelState.IsValid)
                 return Json(new { success = false, productNo = ProductNo });
@@ -102,7 +127,7 @@ namespace qr2.Controllers
 
             if (product != null)
             {
-                product.Platform = 1; //todo: gelen veriye göre güncellenecek
+                product.Platform = Platform; //todo: gelen veriye göre güncellenecek
                 product.QrType = 1; //URL TÝPÝ 1 
                 product.QrContext = QrContext;
                 await _context.SaveChangesAsync();

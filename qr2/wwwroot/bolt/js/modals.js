@@ -356,6 +356,8 @@ function confirmEditSocial() {
             if (data.success) {
                 // Close modal
                 closeEditSocialModal();
+                alert('Social media links saved successfully!');
+                location.reload();
             } else {
                 alert("Hata: " + data.error);
             }

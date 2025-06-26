@@ -15,18 +15,12 @@ function initializeCharts() {
     // Views Chart (Line Chart)
     const viewsCtx = document.getElementById('viewsChart').getContext('2d');
     
-    // Generate sample data for last 30 days
-    const last30Days = [];
-    const viewsData = [];
-    const today = new Date();
-    
-    for (let i = 29; i >= 0; i--) {
-        const date = new Date(today);
-        date.setDate(date.getDate() - i);
-        last30Days.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
-        // Generate random views data with some trend
-        viewsData.push(Math.floor(Math.random() * 50) + 20 + (i % 7 === 0 ? 20 : 0));
-    }
+    const last30Days = scanData.map(item => {
+        const date = new Date(item.date);
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    });
+
+    const viewsData = scanData.map(item => item.scanCount);
     
     viewsChart = new Chart(viewsCtx, {
         type: 'line',
@@ -62,6 +56,7 @@ function initializeCharts() {
                         color: 'rgba(0, 0, 0, 0.1)'
                     },
                     ticks: {
+                        stepSize: 1,
                         color: '#666'
                     }
                 },
@@ -134,6 +129,7 @@ function initializeCharts() {
                         display: false
                     },
                     ticks: {
+                        stepSize: 1,
                         color: '#666'
                     }
                 }

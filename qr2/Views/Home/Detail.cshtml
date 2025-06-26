@@ -1,4 +1,5 @@
-﻿@using qr2.ViewModel
+﻿@using qr2.Enum
+@using qr2.ViewModel
 @model ProductDetailViewModel
 
 <!-- Product Detail Content -->
@@ -19,7 +20,47 @@
         </div>
         <div class="social-section">
             <div class="social-platform">
-                <i id="socialPlatformIcon" class="fab fa-instagram" style="color: #e4405f;"></i>
+                @{
+                    string iconClass = "fab ";
+                    string iconColor = "#000"; // varsayılan renk
+
+                    switch (Model.Platform)
+                    {
+                        case PlatformType.instagram:
+                            iconClass += "fa-instagram";
+                            iconColor = "#e4405f";
+                            break;
+                        case PlatformType.facebook:
+                            iconClass += "fa-facebook";
+                            iconColor = "#3b5998";
+                            break;
+                        case PlatformType.youtube:
+                            iconClass += "fa-youtube";
+                            iconColor = "#FF0000";
+                            break;
+                        case PlatformType.tiktok:
+                            iconClass += "fa-tiktok";
+                            iconColor = "#000000";
+                            break;
+                        case PlatformType.twitter:
+                            iconClass += "fa-twitter";
+                            iconColor = "#1DA1F2";
+                            break;
+                        case PlatformType.linkedin:
+                            iconClass += "fa-linkedin";
+                            iconColor = "#0077B5";
+                            break;
+                        case PlatformType.pinterest:
+                            iconClass += "fa-pinterest";
+                            iconColor = "#BD081C";
+                            break;
+                        default:
+                            iconClass += "fa-question";
+                            iconColor = "#6c757d";
+                            break;
+                    }
+                }
+                <i id="socialPlatformIcon" class="@iconClass" style="color: @iconColor;"></i>
             </div>
             <div class="social-url">
                 <a id="socialPlatformUrl" href="@Model.QrContext" target="_blank" onclick="event.stopPropagation()">@Model.QrContext</a>
@@ -49,7 +90,7 @@
                 <i class="fas fa-eye"></i>
             </div>
             <div class="stat-content">
-                <h3 id="totalScans">1,234</h3>
+                <h3 id="totalScans">@Model.TotalScans</h3>
                 <p class="stat-change positive">+12% from last month</p>
             </div>
         </div>
@@ -59,7 +100,7 @@
                 <i class="fas fa-users"></i>
             </div>
             <div class="stat-content">
-                <h3 id="uniqueScans">987</h3>
+                <h3 id="uniqueScans">@Model.UniqueScans</h3>
                 <p class="stat-change positive">+8% from last month</p>
             </div>
         </div>
@@ -162,6 +203,11 @@
 </div>
 
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const scanData = @Html.Raw(Json.Serialize(Model.DailyScans));
+    </script>
+    
     <script src="~/bolt/js/navigation.js"></script>
     <script src="~/bolt/js/products.js"></script>
     <script src="~/bolt/js/modals.js"></script>
