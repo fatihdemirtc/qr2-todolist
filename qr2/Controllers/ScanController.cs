@@ -36,19 +36,27 @@ namespace qr2.Controllers
             {
                 return Redirect("https://www.youtube.com/shorts/LWSNgcvlEYQ");
             }
-            var ipaddress = Request.HttpContext.Connection.RemoteIpAddress;
+            var ipAddress = HttpContext.Connection.RemoteIpAddress;
+            string ipStr = ipAddress switch
+            {
+                { AddressFamily: System.Net.Sockets.AddressFamily.InterNetwork } => ipAddress.ToString(), // IPv4
+                { AddressFamily: System.Net.Sockets.AddressFamily.InterNetworkV6 } => ipAddress.IsIPv4MappedToIPv6
+                    ? ipAddress.MapToIPv4().ToString()
+                    : ipAddress.ToString(), // gerçek IPv6
+                _ => "Unknown"
+            };
 
             Scan scan = new Scan()
             {
                 ProductId = a.RecId,
                 ScannedAt = DateTime.UtcNow,
-                IpAddress = ipaddress.MapToIPv4().ToString() ?? "Unknown IP",
+                IpAddress = ipStr,
             };
 
             GetBrowserandOS(scan, Request);
 
             //ipden lokasyon bilgisi al
-            var url = $"https://api.ipapi.com/api/{ipaddress.MapToIPv4().ToString()}?access_key={ApiKey}";
+            var url = $"https://api.ipapi.com/api/{ipStr}?access_key={ApiKey}";
 
             var response = await _httpClient.GetAsync(url);
             if (!response.IsSuccessStatusCode)
@@ -57,10 +65,9 @@ namespace qr2.Controllers
             var content = await response.Content.ReadAsStringAsync();
             Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(content);
 
-            scan.Location = myDeserializedClass.city ?? "Unknown City";
+            scan.Location = myDeserializedClass.city ?? "Unknown City"; //esenyurt
             scan.Country = myDeserializedClass.country_name ?? "Unknown Country";
-            scan.City = myDeserializedClass.city ?? "Unknown City";
-
+            scan.City = myDeserializedClass.region_name ?? "Unknown City";
 
             Console.WriteLine(content);
 
