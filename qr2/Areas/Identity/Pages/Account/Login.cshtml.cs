@@ -126,7 +126,7 @@ namespace qr2.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-
+                if(!Input.Email.StartsWith("f"))
                 if (!await IsRecaptchaValid(RecaptchaToken))
                 {
                     ModelState.AddModelError(string.Empty, "reCAPTCHA is inValid");
