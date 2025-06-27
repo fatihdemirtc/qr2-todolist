@@ -75,21 +75,20 @@ function submitFeedback() {
         method: "POST",
         body: formData
     })
-        .then(response => response.ok ? response.json() : Promise.reject("Sunucu hatas�"))
+        .then(response => response.ok ? response.json() : Promise.reject("Server Error"))
         .then(data => {
             if (data.success) {      
                 // Show success message
-                alert('Thank you for your feedback! Your message has been submitted successfully.');
+                showSuccess(data.message);
 
                 // Refresh the feedback display
                 initializeFeedbackDisplay();
             } else {
-                alert("Error: " + data.error);
+                showWarning(data.error);
             }
         })
         .catch(err => {
-            console.error(err);
-            alert("Couldnt send");
+            showError(err);
         });       
 }
 

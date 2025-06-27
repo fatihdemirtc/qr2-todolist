@@ -84,6 +84,34 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-apped-version="true"></script>
    @*  <script src="~/bolt/script.js"></script> *@
+    <script>
+        @if (TempData["ToastSuccess"] != null)
+        {
+                <text>toastSuccess("@TempData["ToastSuccess"]");</text>
+        }
+        @if (TempData["ToastError"] != null)
+        {
+                <text>toastError("@TempData["ToastError"]");</text>
+        }
+         @if (TempData["ToastWarning"] != null)
+        {
+                <text>toastWarning("@TempData["ToastWarning"]");</text>
+        }
+        @if (TempData["AlertSuccess"] != null)
+        {
+                <text>showSuccess("@TempData["AlertSuccess"]");</text>
+        }
+        @if (TempData["AlertError"] != null)
+        {
+                <text>showError("@TempData["AlertError"]");</text>
+        }
+        @if (TempData["AlertWarning"] != null)
+        {
+               <text>showWarning("@TempData["AlertWarning"]");</text>
+        }
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
+    
 </body>
 </html>

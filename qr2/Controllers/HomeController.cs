@@ -130,12 +130,15 @@ namespace qr2.Controllers
         public async Task<IActionResult> EditProduct(int ProductNo, PlatformType Platform, string QrContext)
         {
             if (!ModelState.IsValid)
-                return Json(new { success = false, productNo = ProductNo });
+                return Json(new { success = false, productNo = ProductNo, message = "Please fill in the blanks" });
 
             // Ürün var mý?
             var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductNo == ProductNo);
-
-            if (product != null)
+            if (product == null)
+            {
+                return Json(new { success = false, productNo = ProductNo, message = "Product not found" });
+            }
+            else
             {
                 product.Platform = Platform; //todo: gelen veriye göre güncellenecek
                 product.QrType = 1; //URL TÝPÝ 1 
@@ -143,36 +146,8 @@ namespace qr2.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            return Json(new { success = true, productNo = ProductNo });
+            return Json(new { success = true, productNo = ProductNo, message = "Social media links saved successfully!" });
         }
-
-        //public IActionResult Complete(int id)
-        //{
-        //    var todo = _context.TodoItems.Find(id);
-        //    if (todo != null)
-        //    {
-        //        todo.IsCompleted = true;
-        //        _context.SaveChanges();
-        //    }
-        //    return RedirectToAction("Index");
-        //}
-
-        //[HttpPost]
-        //public IActionResult NewProduct(string title)
-        //{
-        //    if (!string.IsNullOrEmpty(title))
-        //    {
-        //        _context.TodoItems.Add(new TodoItem { Title = title, IsCompleted = false });
-        //        _context.SaveChanges();
-        //    }
-        //    return RedirectToAction("Index");
-        //}
-
-
-        //public IActionResult Privacy()
-        //{
-        //    return View();
-        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

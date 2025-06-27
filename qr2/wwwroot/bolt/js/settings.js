@@ -1,5 +1,6 @@
 // Initialize settings functionality
 function initializeSettings() {
+    
     // Change Password Form
     //const changePasswordForm = document.getElementById('changePasswordForm');
     //if (changePasswordForm) {

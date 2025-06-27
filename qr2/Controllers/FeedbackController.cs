@@ -42,7 +42,7 @@ public class FeedbackController : Controller
     [HttpPost]
     public async Task<IActionResult> Submit(FeedbackViewModel model)
     {
-        if (!ModelState.IsValid) return Json(new { success = false, error = "ModelState" });
+        if (!ModelState.IsValid) return Json(new { success = false, error = "Please fill in the blanks correctly"});
 
         var user = await _userManager.GetUserAsync(User);
         var feedback = new Feedback
@@ -55,6 +55,6 @@ public class FeedbackController : Controller
         _context.Feedbacks.Add(feedback);
         await _context.SaveChangesAsync();
 
-        return Json(new { success = true });
+        return Json(new { success = true , message= "Thank you for your feedback! Your message has been submitted successfully." });
     }
 }

@@ -37,14 +37,14 @@ namespace qr2.Controllers
         {
             if (string.IsNullOrWhiteSpace(OldPassword) || string.IsNullOrWhiteSpace(NewPassword))
             {
-                ModelState.AddModelError("", "Please fill in all fields.");
-                return View();
+                TempData["ToastError"] = "Please fill in all fields.";
+                return RedirectToAction("Index");
             }
 
             if (NewPassword != ConfirmNewPassword)
             {
-                ModelState.AddModelError("confirmNewPassword", "New passwords do not match.");
-                return View();
+                TempData["ToastError"] = "New passwords do not match.";
+                return RedirectToAction("Index");
             }
 
             var user = await _userManager.GetUserAsync(User);
@@ -54,16 +54,16 @@ namespace qr2.Controllers
 
             if (result.Succeeded)
             {
-                TempData["Success"] = "Your password was changed successfully.";
-                return RedirectToAction("Index"); // veya Profile, Home, vs.
+                TempData["ToastSuccess"] = "Your password was changed successfully.";
+                return RedirectToAction("Index"); 
             }
 
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error.Description);
-            }
+            var allErrors = result.Errors         
+         .Select(e => e.Description)
+         .ToList();
 
-            return View();
+            TempData["ToastError"] = string.Join("<br/>", allErrors); 
+            return RedirectToAction("Index");
         }
 
     }

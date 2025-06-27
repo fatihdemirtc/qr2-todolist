@@ -9,14 +9,7 @@
             <p>Update your account password for better security.</p>
         </div>
         <form asp-action="Index" method="post" class="settings-form">
-            @Html.AntiForgeryToken()
-            @if (TempData["Success"] != null)
-            {
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    @TempData["Success"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            }
+            @Html.AntiForgeryToken()           
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label for="OldPassword">Current Password</label>
@@ -45,12 +38,11 @@
 }
 
 <script src="~/bolt/js/navigation.js"></script>
-<script src="~/bolt/js/settings.js"></script>
+<script src="~/bolt/js/alert-system.js"></script>
 
 <script>
     // Initialize settings page
     document.addEventListener('DOMContentLoaded', function() {
         initializeNavigation();
-        initializeSettings();
     });
 </script>

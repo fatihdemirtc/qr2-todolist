@@ -4,7 +4,7 @@
 function showAddProductModal() {
     const modal = document.getElementById('addProductModal');
     modal.classList.add('show');
-
+   
     // Reset form and validation when opening modal
     resetAddProductForm();
 }
@@ -171,12 +171,12 @@ function confirmSocialMedia() {
     const platformUrl = document.getElementById('platformUrl');
 
     if (!platformSelect.value) {
-        alert('Please select a social media platform.');
+        toastError('Please select a social media platform.');
         return;
     }
 
     if (!platformUrl.value.trim()) {
-        alert('Please enter a URL for the selected platform.');
+        toastError('Please enter a URL for the selected platform.');
         return;
     }
 
@@ -196,22 +196,14 @@ function confirmSocialMedia() {
         .then(data => {
             if (data.success) {
                 closeSocialMediaModal();
-                alert('Social media links saved successfully!');
+                toastSuccess(response.message);               
             } else {
-                alert("Hata: " + data.error);
+                toastError(data.message);
             }
         })
         .catch(err => {
-            _logger.LogError(ex, "SaveChanges sırasında hata.");
-            alert("��lem ba�ar�s�z.");
+            toastError(err);
         });            
-
-    // Show success message
-    
-    console.log('Social Media Link:', {
-        platform: platformSelect.value,
-        url: platformUrl.value.trim()
-    });
 
     // Close modal
     
@@ -330,16 +322,6 @@ function confirmEditSocial() {
     const platformSelect = document.getElementById('editSocialPlatformSelect');
     const platformUrl = document.getElementById('editSocialPlatformUrl');
 
-    if (!platformSelect.value) {
-        alert('Please select a social media platform.');
-        return;
-    }
-
-    if (!platformUrl.value.trim()) {
-        alert('Please enter a URL for the selected platform.');
-        return;
-    }   
-
     const form = document.getElementById("editSocialMediaForm");
     const formData = new FormData(form); // token da dahil
 
@@ -347,34 +329,35 @@ function confirmEditSocial() {
     const id = urlParams.get('id');
     formData.append("ProductNo", id);
 
+    if (!platformSelect.value) {
+        toastError('Please select a social media platform.');
+        return;
+    }
+
+    if (!platformUrl.value.trim()) {
+        toastError('Please enter a URL for the selected platform.');
+        return;
+    }
+
     fetch("/Home/EditProduct", {
             method: "POST",
             body: formData
         })
         .then(response => response.ok ? response.json() : Promise.reject("Sunucu hatas�"))
         .then(data => {
+            closeEditSocialModal();  
             if (data.success) {
                 // Close modal
-                closeEditSocialModal();
-                alert('Social media links saved successfully!');
-                location.reload();
+                toastSuccess(data.message);                     
+                //location.reload(); 
             } else {
-                alert("Hata: " + data.error);
+                toastError("Hata: " + data.message);               
             }
         })
         .catch(err => {
-            _logger.LogError(ex, "SaveChanges sırasında hata.");
-            alert("��lem ba�ar�s�z.");
+            toastError(err);
+            closeEditSocialModal();
         });                
-
-    //// Show success message
-    //alert('Social media link updated successfully!');
-    //console.log('Updated Social Media Link:', {
-    //    platform: platformSelect.value,
-    //    url: platformUrl.value.trim()
-    //});
-
-   
 }
 
 // Initialize modal functionality
@@ -424,7 +407,7 @@ function initializeModals() {
                     method: "POST",
                     body: formData
                 })
-                    .then(response => response.ok ? response.json() : Promise.reject("Sunucu hatası"))
+                    .then(response => response.ok ? response.json() : Promise.reject("Server Error"))
                     .then(data => {
                         if (data.success) {
                             // Close add product modal
@@ -433,12 +416,13 @@ function initializeModals() {
                             // Show social media modal
                             showSocialMediaModal(productNumber);
                         } else {
-                            alert("Hata: " + data.error);
+                            showInfo(data.message);
                         }
                     })
                     .catch(err => {
                         console.error(err);
-                        alert("İşlem başarısız.");
+                       /* alert("İşlem başarısız.");*/
+                        showError(err);
                     });
 
 
