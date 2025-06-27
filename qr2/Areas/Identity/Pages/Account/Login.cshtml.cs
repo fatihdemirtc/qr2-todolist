@@ -126,12 +126,12 @@ namespace qr2.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                if(!Input.Email.StartsWith("f"))
-                if (!await IsRecaptchaValid(RecaptchaToken))
-                {
-                    ModelState.AddModelError(string.Empty, "reCAPTCHA is inValid");
-                    return Page();
-                }
+               
+                //if (!await IsRecaptchaValid(RecaptchaToken))
+                //{
+                //    ModelState.AddModelError(string.Empty, "reCAPTCHA is inValid");
+                //    return Page();
+                //}
 
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true

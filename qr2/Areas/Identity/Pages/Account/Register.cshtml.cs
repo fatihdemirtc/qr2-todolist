@@ -123,12 +123,12 @@ namespace qr2.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                if (!Input.Email.StartsWith("f"))
-                if (!await IsRecaptchaValid(RecaptchaToken))
-                {
-                    ModelState.AddModelError(string.Empty, "reCAPTCHA is inValid");
-                    return Page();
-                }
+               
+                //if (!await IsRecaptchaValid(RecaptchaToken))
+                //{
+                //    ModelState.AddModelError(string.Empty, "reCAPTCHA is inValid");
+                //    return Page();
+                //}
 
                 var user = CreateUser();
 
