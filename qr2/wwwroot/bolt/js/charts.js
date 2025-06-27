@@ -27,7 +27,7 @@ function initializeCharts() {
         data: {
             labels: last30Days,
             datasets: [{
-                label: 'Views',
+                label: 'Scanner',
                 data: viewsData,
                 borderColor: '#667eea',
                 backgroundColor: 'rgba(102, 126, 234, 0.1)',
@@ -78,24 +78,41 @@ function initializeCharts() {
         }
     });
     
-    // OS Chart (Horizontal Bar Chart)
     const osCtx = document.getElementById('osChart').getContext('2d');
-    
+
+    // Enum ID'lerine karþýlýk gelen label ve renkler
+    const deviceLabels = {
+        1: 'Windows',
+        2: 'Mac',
+        3: 'Linux',
+        4: 'Android',
+        5: 'iOS',
+        0: 'Unknown'
+    };
+
+    const deviceColors = {
+        1: '#4e73df',  // Windows - mavi
+        2: '#a28cd1',  // Mac - mor
+        3: '#a3a3a3',  // Linux - gri
+        4: '#34a853',  // Android - yeþil
+        5: '#ffc658',  // iOS - sarý
+        0: '#cccccc'   // Unknown - gri açýk
+    };
+
+    const labels = osData.map(item => deviceLabels[item.device] || 'Other');
+    const data = osData.map(item => item.scanCount);
+    const bgColors = osData.map(item => deviceColors[item.device] || '#888');
+    const borderColors = bgColors.map(color => color);
+
     osChart = new Chart(osCtx, {
         type: 'bar',
         data: {
-            labels: ['Android', 'iOS'],
+            labels: labels,
             datasets: [{
-                label: 'Users',
-                data: [65, 35],
-                backgroundColor: [
-                    '#a4de6c',
-                    '#ffc658'
-                ],
-                borderColor: [
-                    '#82ca9d',
-                    '#ffb347'
-                ],
+                label: 'Scanner',
+                data: data,
+                backgroundColor: bgColors,
+                borderColor: borderColors,
                 borderWidth: 1,
                 borderRadius: 6,
                 borderSkipped: false
@@ -112,16 +129,14 @@ function initializeCharts() {
             },
             scales: {
                 x: {
+                    
                     beginAtZero: true,
-                    max: 100,
                     grid: {
                         color: 'rgba(0, 0, 0, 0.1)'
                     },
                     ticks: {
-                        color: '#666',
-                        callback: function(value) {
-                            return value + '%';
-                        }
+                        stepSize: 1,
+                        color: '#666'
                     }
                 },
                 y: {
@@ -136,4 +151,5 @@ function initializeCharts() {
             }
         }
     });
+
 }

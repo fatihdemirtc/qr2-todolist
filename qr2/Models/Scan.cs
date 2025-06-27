@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using qr2.Enum;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace qr2.Models
@@ -24,7 +25,7 @@ namespace qr2.Models
 
         [StringLength(100)]
         [Required]
-        public int? ScannedDevice { get; set; } //OS
+        public ScannedDeviceType? ScannedDevice { get; set; } //OS
 
         [StringLength(100)]
         public string? Browser { get; set; }

@@ -88,23 +88,23 @@ namespace qr2.Controllers
 
             if (os.Contains("Windows") || os.Contains("windows"))
             {
-                scan.ScannedDevice = 1;
+                scan.ScannedDevice = Enum.ScannedDeviceType.Windows;
             }
             else if (os.Contains("Mac") || os.Contains("mac"))
             {
-                scan.ScannedDevice = 3;
+                scan.ScannedDevice = Enum.ScannedDeviceType.Mac;
             }
             else if (os.Contains("Linux") || os.Contains("linux"))
             {
-                scan.ScannedDevice = 4;
+                scan.ScannedDevice = Enum.ScannedDeviceType.Linux;
             }
             else if (os.Contains("Android") || os.Contains("android"))
             {
-                scan.ScannedDevice = 5;
+                scan.ScannedDevice = Enum.ScannedDeviceType.Android;
             }
             else if (os.Contains("iOS") || os.Contains("ios"))
             {
-                scan.ScannedDevice = 6;
+                scan.ScannedDevice = Enum.ScannedDeviceType.iOS;
             }
 
             scan.Browser = browser;

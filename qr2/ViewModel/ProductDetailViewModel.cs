@@ -14,10 +14,18 @@ namespace qr2.ViewModel
         public int UniqueScans { get; set; }
 
         public List<DailyScanDto> DailyScans { get; set; }
+
+        public List<OSDto> OSScans { get; set; }
     }
     public class DailyScanDto
     {
         public DateTime Date { get; set; }
+        public int ScanCount { get; set; }
+    }
+
+    public class OSDto
+    {
+        public ScannedDeviceType? Device { get; set; }
         public int ScanCount { get; set; }
     }
 }

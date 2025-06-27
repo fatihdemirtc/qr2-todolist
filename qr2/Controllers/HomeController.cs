@@ -64,6 +64,15 @@ namespace qr2.Controllers
                 })
                 .ToList();
 
+            var osScans = detail.Scans
+        .GroupBy(s => s.ScannedDevice)
+        .Select(g => new OSDto
+        {
+            Device = g.Key,
+            ScanCount = g.Count()
+        })
+        .ToList();
+
             return View(new ProductDetailViewModel
             {
                 ProductNo = detail.ProductNo,
@@ -72,7 +81,8 @@ namespace qr2.Controllers
                 QrContext = detail.QrContext,
                 TotalScans = detail.Scans.Count,
                 UniqueScans = detail.Scans.Select(s => s.IpAddress).Distinct().Count(),
-                DailyScans = dailyScans
+                DailyScans = dailyScans,
+                OSScans = osScans
             });
         }
 

@@ -206,6 +206,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const scanData = @Html.Raw(Json.Serialize(Model.DailyScans));
+        const osData = @Html.Raw(Json.Serialize(Model.OSScans));
     </script>
     
     <script src="~/bolt/js/navigation.js"></script>
