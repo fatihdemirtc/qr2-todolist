@@ -1198,7 +1198,6 @@ body {
     }
 
 .feedback-content {
-    max-width: 400px;
     word-wrap: break-word;
 }
 
@@ -2159,7 +2158,7 @@ body {
     }
 
     .feedback-content {
-        max-width: 150px;
+        max-width: fit-content;
     }
 
     .message-preview {
