@@ -1,41 +1,56 @@
-﻿@model IEnumerable<qr2.Models.UserProduct>
+﻿@using qr2.ViewModel
+@model ChangePasswordViewModel
 
-@{
-    ViewData["Title"] = "Index";
+
+<div class="settings-content">
+    <div class="settings-card">
+        <div class="settings-header">
+            <h3>Change Password</h3>
+            <p>Update your account password for better security.</p>
+        </div>
+        <form asp-action="Index" method="post" class="settings-form">
+            @Html.AntiForgeryToken()
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label for="OldPassword">Current Password</label>
+                <input type="password" id="OldPassword" name="OldPassword" class="form-control" placeholder="Enter your current password" required />
+            </div>
+
+            <div class="form-group">
+                <label for="NewPassword">New Password</label>
+                <input type="password" id="NewPassword" name="NewPassword" class="form-control" placeholder="Enter your new password" required />
+            </div>
+
+            <div class="form-group">
+                <label for="ConfirmNewPassword">Confirm New Password</label>
+                <input type="password" id="ConfirmNewPassword" name="ConfirmNewPassword" class="form-control" placeholder="Confirm your new password" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-key"></i> Update Password
+            </button>
+        </form>
+
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }
 
-<h1>Index</h1>
+<script src="~/bolt/js/navigation.js"></script>
+<script src="~/bolt/js/settings.js"></script>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductPassword)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<script>
+    // Initialize settings page
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeNavigation();
+        initializeSettings();
+    });
+</script>
