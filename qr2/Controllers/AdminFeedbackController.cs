@@ -20,8 +20,10 @@ namespace qr2.Controllers
         // GET: AdminFeedback
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Feedbacks.Include(f => f.User);
-            return View(await appDbContext.ToListAsync());
+            var feedbacksList = await _context.Feedbacks.Include(x=>x.User)
+                .ToListAsync();
+
+            return View(feedbacksList);
         }
 
         // GET: AdminFeedback/Details/5

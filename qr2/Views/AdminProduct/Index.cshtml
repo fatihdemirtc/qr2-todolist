@@ -1,41 +1,86 @@
-﻿@model IEnumerable<qr2.Models.UserProduct>
+﻿@model IEnumerable<Product>
 
-@{
-    ViewData["Title"] = "Index";
-}
+<div class="product-list-content">
+    <div class="content-header">
+        <h3>Products</h3>
+        <button class="btn btn-primary" onclick="showQuickAddModal()">
+            <i class="fas fa-plus"></i> Add Product
+        </button>
+    </div>
 
-<h1>Index</h1>
+    <div class="product-list-table-container">
+        <table class="product-list-table">
+            <thead>
+                <tr>
+                    <th>Product No</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>User Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr onclick="showProductDetail('Smartphone Pro', 'Electronics', 1234)">
+                        <td>@item.ProductNo</td>
+                        <td>@item.ProductName</td>
+                        <td><span class="category-badge electronics">@item.ProductType</span></td>
+                        <td>john.doe@example.com</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="quickAddModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Quick Add Product</h3>
+            <button class="close-btn" onclick="closeQuickAddModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="quickAddForm" method="post">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label for="quickProductType">Product Type</label>
+                    <select id="quickProductType" name="ProductType" required>
+                        <option value="">Select product type...</option>
+                        <option value="Tshirt_Man">Tshirt Woman</option>
+                        <option value="Tshirt_Woman">Tshirt Woman</option>
+                    </select>
+                </div>
+                <button type="submit" id="quickAddSubmitBtn" class="btn btn-primary" disabled>Add</button>
+            </form>
+        </div>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.RecId)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<script src="~/bolt/js/navigation.js"></script>
+<script src="~/bolt/js/products.js"></script>
+<script src="~/bolt/js/modals.js"></script>
+<script src="~/bolt/js/alert-system.js"></script>
+
+<script>
+    // Initialize product list page
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeNavigation();
+        initializeProducts();
+        initializeModals();
+
+        // Override showProductDetail to redirect to product-detail.html
+        window.showProductDetail = function(productName, productType, views) {
+            // Store product data in sessionStorage
+            sessionStorage.setItem('currentProduct', JSON.stringify({
+                name: productName,
+                type: productType,
+                views: views
+            }));
+            window.location.href = 'product-detail.html';
+        };
+
+
+       
+    });
+</script>

@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using qr2.Data;
+using qr2.Enum;
 using qr2.Models;
 using qr2.ViewModel;
 
 namespace qr2.Controllers
 {
-    [Authorize(Roles = "admin")]    
+    [Authorize(Roles = "admin")]
     public class AdminProductController : Controller
     {
         private readonly AppDbContext _context;
@@ -26,18 +27,12 @@ namespace qr2.Controllers
             return View();
         }
 
-       
-
-        public async Task<IActionResult> MyProducts()
+        public async Task<IActionResult> Index()
         {
-            var userId = _userManager.GetUserId(User);
-            var userProducts = await _context.UserProduct
-                .Include(up => up.Product)
-                .Where(up => up.UserId == userId)
-                .Select(up => up.Product)
+            var productList = await _context.Products
                 .ToListAsync();
 
-            return View(userProducts);
+            return View(productList);
         }
 
         // GET: /Product/Edit/{id}
@@ -48,23 +43,36 @@ namespace qr2.Controllers
             return View(product);
         }
 
-        // POST: /Product/Edit/{id}
+        // POST: /Product/Add
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, EditProductViewModel updated)
+        public async Task<IActionResult> Add(ProductType ProductType)
         {
-            if (id != updated.RecId) return BadRequest();
+            Product newProduct = new Product();
 
-            var product = await _context.Products.FindAsync(id);
-            if (product == null) return NotFound();
+            var random = new Random();
+            int number1;
+            do
+            {
+                number1 = new Random().Next(10000000, 100000000);
+            } while (_context.Products.Any(x => x.ProductNo == number1));
 
-            if (!ModelState.IsValid) return View(updated);
+            var random2 = new Random();
+            int number2 = random.Next(10000000, 100000000);
 
-            product.QrType = updated.QrType;
-            product.QrContext = updated.QrContext;
+            newProduct.ProductNo = number1;
+            newProduct.ProductPassword = number2.ToString();
+            newProduct.ProductType = ProductType;
 
+            await _context.Products.AddAsync(newProduct);
             await _context.SaveChangesAsync();
-            return RedirectToAction("MyProducts");
+
+            return Json(new
+            {
+                success = true,
+                productNumber = number1,
+                message = $"Product has been added successfully with product number: {number1}"
+            });
         }
 
         [HttpGet]

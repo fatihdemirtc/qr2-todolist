@@ -10,7 +10,7 @@ namespace qr2.Models
         public long RecId { get; set; }
 
         [Required]
-        public int ProductType { get; set; }
+        public ProductType ProductType { get; set; }
 
         [StringLength(250)]
         public string? ProductName { get; set; }

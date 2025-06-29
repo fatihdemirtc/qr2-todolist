@@ -1,4 +1,4 @@
-
+﻿
 
 // Products related functions
 function showProductList() {
@@ -121,8 +121,62 @@ function deleteCurrentProduct() {
     }
 }
 
-// Initialize products functionality
+// Admin Product ADD
 function initializeProducts() {
     // Products functionality is handled by click events and other functions
     // Any additional product management functionality can be added here
+    const quickAddForm = document.getElementById('quickAddForm');
+    if (quickAddForm) {
+        const quickProductTypeField = document.getElementById('quickProductType');
+
+        if (quickProductTypeField) {
+            quickProductTypeField.addEventListener('change', function () {
+                validateQuickAddForm();
+            });
+
+            quickAddForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const productType = quickProductTypeField.value;
+
+                // Final validation check
+                if (!productType) {
+                    showError('Please select a product type.', 'Product Type Required');
+                    return;
+                }
+
+                const form = document.getElementById("quickAddForm");
+                const formData = new FormData(form); // token da dahil
+
+                fetch("/AdminProduct/Add", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(response => response.ok ? response.json() : Promise.reject("Sunucu hatas�"))
+                    .then(data => {
+                        if (data.success) {
+                            showSuccess(data.message);
+                            // Close modal
+                            setTimeout(() => {
+                                closeQuickAddModal();
+                            }, 1500);
+                        } else {
+                            toastError(data.message);
+                        }
+                    })
+                    .catch(err => {
+                        toastError(err);
+                    });            
+
+
+                // Show success message
+               
+                console.log('New Quick Product:', {
+                    productNumber: productNumber,
+                    productType: productType
+                });
+
+             
+            });
+        }
+    }
 }

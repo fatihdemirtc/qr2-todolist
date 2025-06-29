@@ -1,47 +1,70 @@
 ﻿@model IEnumerable<qr2.Models.Feedback>
+<!-- Admin Feedback Content -->
+<div class="admin-feedback-content">
+    <div class="admin-feedback-header">
+        <h3>User Feedback Management</h3>
+        <p>View and manage all feedback submitted by users.</p>
+    </div>
 
-@{
-    ViewData["Title"] = "Index";
-}
+    <div class="admin-feedback-table-container">
+        <table class="admin-feedback-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr onclick="showFeedbackDetail('@item.User.Email', '@item.Message', '@item.SubmittedAt')">
+                        <td>@item.User.Email</td>
+                        <td class="message-preview">@item.Message</td>
+                        <td>@item.SubmittedAt</td>
+                    </tr>
+                }              
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<h1>Index</h1>
+<div id="feedbackDetailModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Feedback Details</h3>
+            <button class="close-btn" onclick="closeFeedbackDetailModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="feedback-detail">
+                <div class="feedback-detail-header">
+                    <div class="feedback-user">
+                        <i class="fas fa-user"></i>
+                        <span id="feedbackDetailUser">user@example.com</span>
+                    </div>
+                    <div class="feedback-date">
+                        <i class="fas fa-calendar"></i>
+                        <span id="feedbackDetailDate">Dec 15, 2024, 2:30 PM</span>
+                    </div>
+                </div>
+                <div class="feedback-detail-content">
+                    <h4>Message:</h4>
+                    <p id="feedbackDetailMessage">Feedback message content will appear here...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Message)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SubmittedAt)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Message)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SubmittedAt)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<script src="~/bolt/js/navigation.js"></script>
+<script src="~/bolt/js/feedback.js"></script>
+
+<script>
+    // Initialize admin feedback page
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeNavigation();
+        initializeFeedback();
+    });
+</script>

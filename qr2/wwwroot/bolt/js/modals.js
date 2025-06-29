@@ -1,6 +1,39 @@
-﻿// Modal related functions
+﻿function showQuickAddModal() {
+    const modal = document.getElementById('quickAddModal');
+    modal.classList.add('show');
 
-// Add Product Modal
+    // Reset form when opening modal
+    resetQuickAddForm();
+}
+
+function closeQuickAddModal() {
+    const modal = document.getElementById('quickAddModal');
+    modal.classList.remove('show');
+    resetQuickAddForm();
+}
+
+function resetQuickAddForm() {
+    const form = document.getElementById('quickAddForm');
+    const submitBtn = document.getElementById('quickAddSubmitBtn');
+    const productTypeField = document.getElementById('quickProductType');
+
+    if (form) form.reset();
+    if (submitBtn) submitBtn.disabled = true;
+    if (productTypeField) {
+        productTypeField.classList.remove('invalid', 'valid');
+        productTypeField.value = '';
+    }
+}
+function validateQuickAddForm() {
+    const submitBtn = document.getElementById('quickAddSubmitBtn');
+    const productTypeField = document.getElementById('quickProductType');
+
+    if (!submitBtn || !productTypeField) return;
+
+    const isFormValid = productTypeField.value !== '';
+    submitBtn.disabled = !isFormValid;
+}
+
 function showAddProductModal() {
     const modal = document.getElementById('addProductModal');
     modal.classList.add('show');
