@@ -21,6 +21,7 @@ public class FeedbackController : Controller
 
     public async Task<IActionResult> Index()
     {
+        ViewBag.PageTitle = "Feedback";
         return View();
     }
 

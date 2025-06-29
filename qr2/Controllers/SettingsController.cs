@@ -28,7 +28,8 @@ namespace qr2.Controllers
         // GET: Settings
         public async Task<IActionResult> Index()
         {
-           return View();
+            ViewBag.PageTitle = "Settings";
+            return View();
         }
 
         [HttpPost]

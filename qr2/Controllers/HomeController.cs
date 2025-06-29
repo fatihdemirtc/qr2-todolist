@@ -26,6 +26,9 @@ namespace qr2.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.ShowBackButton = false;
+            ViewBag.PageTitle = "Dashboard";
+
             var userId = _userManager.GetUserId(User);
             var userProducts = await _context.UserProduct
                 .Include(up => up.Product)
@@ -38,6 +41,10 @@ namespace qr2.Controllers
 
         public async Task<IActionResult> Detail(int id)
         {
+            ViewBag.ShowBackButton = true;
+            ViewBag.BackUrl = "/Home/Index";
+            ViewBag.PageTitle = "Product Detail";
+
             var detail = await _context.Products
          .Include(p => p.Scans)
          .FirstOrDefaultAsync(p => p.ProductNo == id);

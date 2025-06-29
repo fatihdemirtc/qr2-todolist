@@ -1,4 +1,6 @@
 ﻿@using System.Globalization
+@inject UserManager<ApplicationUser> UserManager
+@using Microsoft.AspNetCore.Identity
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,7 +45,13 @@
                     <button class="menu-toggle" onclick="toggleSidebar()">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <h2>Dashboard</h2>
+                    @if (ViewBag.ShowBackButton == true)
+                    {
+                        <button class="back-btn" onclick="window.location.href='@ViewBag.BackUrl'">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                    }
+                    <h2>@ViewBag.PageTitle</h2>
                 </div>
                 <div class="nav-right">
                     <form id="langForm" asp-controller="Culture" asp-action="SetLanguage" method="post">
@@ -62,13 +70,16 @@
                     <div class="profile-dropdown">
                         <button class="profile-btn" onclick="toggleProfileDropdown()">
                             <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&dpr=1" alt="Profile">
-                            <span>John Doe</span>
+                            @{
+                                var user = await UserManager.GetUserAsync(User);
+                                var email = user?.Email;
+                            }
+                            <span>@email</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
                         <div class="profile-menu">
                             <a href="#"><i class="fas fa-user"></i> Profile</a>
                             <a href="#"><i class="fas fa-cog"></i> Settings</a>
-                            <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
                             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
                                 <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
                             </form>
