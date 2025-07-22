@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using qr2.Data;
+using qr2.Middlewares;
 using qr2.Models;
 using qr2.Services;
 using System.Globalization;
@@ -46,6 +47,7 @@ builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionLoggingMiddleware>();
 // Middleware pipeline
 
 var supportedCultures = new[] { "en", "tr", "de", "fr", "es" };
@@ -72,7 +74,14 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 });
 
 app.UseRequestLocalization(localizationOptions);
-
+app.UseStatusCodePages(context =>
+{
+    if (context.HttpContext.Response.StatusCode == 404 || context.HttpContext.Response.StatusCode == 403)
+    {
+        context.HttpContext.Response.Redirect("/");
+    }
+    return Task.CompletedTask;
+});
 app.UseStaticFiles();
 app.UseRouting();
 

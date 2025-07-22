@@ -100,20 +100,26 @@ function validateAddProductField(fieldId, validationId) {
     field.classList.remove('invalid', 'valid');
 
     if (fieldId === 'productNumber' || fieldId === 'productPassword') {
-        // Dashboard version - 8 character validation
-        isValid = value.length === 8;
+        // Sadece rakam kontrolü
+        const isNumeric = /^\d*$/.test(value);
+
+        // 8 karakter ve sadece rakam kontrolü
+        isValid = isNumeric && value.length === 8;
+
         if (value.length > 0) {
             field.classList.add(isValid ? 'valid' : 'invalid');
         }
 
         // Update validation message
-        if (value.length === 0) {
+        if (!isNumeric) {
+            validation.textContent = 'Only numbers are allowed';
+        } else if (value.length === 0) {
             validation.textContent = '';
         } else if (value.length < 8) {
-            validation.textContent = `Must be exactly 8 characters (${value.length}/8)`;
-        } else if (value.length === 8) {
+            validation.textContent = `Must be exactly 8 digits (${value.length}/8)`;
+        } else {
             validation.textContent = '';
-        }
+        }    
     } else if (fieldId === 'productName') {
         // Product-list version - name validation
         isValid = value.length >= 3;
@@ -382,7 +388,7 @@ function confirmEditSocial() {
             if (data.success) {
                 // Close modal
                 toastSuccess(data.message);                     
-                //location.reload(); 
+               
             } else {
                 toastError("Hata: " + data.message);               
             }
@@ -390,7 +396,8 @@ function confirmEditSocial() {
         .catch(err => {
             toastError(err);
             closeEditSocialModal();
-        });                
+        });   
+    location.reload(); 
 }
 
 // Initialize modal functionality

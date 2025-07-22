@@ -39,5 +39,7 @@ namespace qr2.Data
         public DbSet<Scan> Scan { get; set; }
 
         public DbSet<Feedback> Feedbacks { get; set; }
+
+        public DbSet<ErrorLog> ErrorLogs { get; set; }
     }
 }

@@ -126,14 +126,14 @@ namespace qr2.Controllers
 
     public class Location
     {
-        public int geoname_id { get; set; }
+        public int? geoname_id { get; set; }
         public string capital { get; set; }
         public List<Language> languages { get; set; }
         public string country_flag { get; set; }
         public string country_flag_emoji { get; set; }
         public string country_flag_emoji_unicode { get; set; }
         public string calling_code { get; set; }
-        public bool is_eu { get; set; }
+        public bool? is_eu { get; set; }
     }
 
     public class Root
@@ -148,8 +148,8 @@ namespace qr2.Controllers
         public string region_name { get; set; }
         public string city { get; set; }
         public string zip { get; set; }
-        public double latitude { get; set; }
-        public double longitude { get; set; }
+        public double? latitude { get; set; }
+        public double? longitude { get; set; }
         public object msa { get; set; }
         public object dma { get; set; }
         public string radius { get; set; }

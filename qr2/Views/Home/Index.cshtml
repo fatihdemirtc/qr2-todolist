@@ -41,12 +41,12 @@
                 @Html.AntiForgeryToken()
                 <div class="form-group">
                     <label for="productNumber">Product Number</label>
-                    <input type="text" id="productNumber" name="ProductNo" placeholder="Enter product number" maxlength="8" required>
+                    <input type="text" id="productNumber" name="ProductNo" placeholder="Enter product number" maxlength="8" inputmode="numeric" pattern="\d*" required>
                     <div id="productNumberValidation" class="validation-message"></div>
                 </div>
                 <div class="form-group">
                     <label for="productPassword">Product Password</label>
-                    <input type="password" id="productPassword" name="ProductPassword" placeholder="Enter product password" maxlength="8" required>
+                    <input type="password" id="productPassword" name="ProductPassword" placeholder="Enter product password" maxlength="8" inputmode="numeric" pattern="\d*" required>
                     <div id="productPasswordValidation" class="validation-message"></div>
                 </div>
                 <button type="submit" id="addProductSubmitBtn" class="btn btn-primary" disabled>Submit</button>
