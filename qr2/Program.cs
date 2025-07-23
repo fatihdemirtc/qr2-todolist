@@ -56,6 +56,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 var app = builder.Build();
 app.UseForwardedHeaders();
 app.UseMiddleware<ExceptionLoggingMiddleware>();
+app.UseHttpsRedirection();
 // Middleware pipeline
 
 var supportedCultures = new[] { "en", "tr", "de", "fr", "es" };
@@ -76,7 +77,10 @@ localizationOptions.RequestCultureProviders = new List<IRequestCultureProvider>
     
 };
 
-
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseRequestLocalization(localizationOptions);
 app.UseStatusCodePages(context =>
@@ -87,12 +91,11 @@ app.UseStatusCodePages(context =>
     }
     return Task.CompletedTask;
 });
-app.UseStaticFiles();
-app.UseHttpsRedirection();
-app.UseRouting();
 
-app.UseAuthentication();
-app.UseAuthorization();
+
+
+
+
 
 // Route mapping
 app.MapDefaultControllerRoute();
