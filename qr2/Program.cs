@@ -46,7 +46,10 @@ builder.Services.AddRazorPages();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
-
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+});
 app.UseMiddleware<ExceptionLoggingMiddleware>();
 // Middleware pipeline
 
@@ -68,10 +71,7 @@ localizationOptions.RequestCultureProviders = new List<IRequestCultureProvider>
     
 };
 
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
-});
+
 
 app.UseRequestLocalization(localizationOptions);
 app.UseStatusCodePages(context =>
