@@ -83,6 +83,7 @@ app.UseStatusCodePages(context =>
     return Task.CompletedTask;
 });
 app.UseStaticFiles();
+app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
