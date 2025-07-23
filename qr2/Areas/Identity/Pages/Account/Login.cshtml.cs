@@ -175,7 +175,9 @@ namespace qr2.Areas.Identity.Pages.Account
         {
             var redirectUrl = Url.Page("./Login", pageHandler: "Callback", values: new { returnUrl });
 
-            Console.WriteLine("Redirect URL: " + redirectUrl);
+           
+            _logger.LogInformation(redirectUrl+"");
+
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
         }
