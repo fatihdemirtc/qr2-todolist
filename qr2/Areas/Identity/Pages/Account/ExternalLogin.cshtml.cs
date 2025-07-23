@@ -91,7 +91,7 @@ namespace qr2.Areas.Identity.Pages.Account
 
         public IActionResult OnPost(string provider, string returnUrl = null)
         {
-            var redirectUrl = "/signin-google";
+            var redirectUrl = "https://qrstyle.shop/signin-google";
 
             _logger.LogInformation(redirectUrl + "");
 
