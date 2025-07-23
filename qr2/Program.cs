@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,13 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 builder.Services.AddRazorPages();
 
 builder.Services.AddHttpClient();
+
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear(); // 🔥 GCP / LoadBalancer güvenli sayılmıyor olabilir
+    options.KnownProxies.Clear();
+});
 
 var app = builder.Build();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
