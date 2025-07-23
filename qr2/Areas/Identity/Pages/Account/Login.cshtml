@@ -55,10 +55,10 @@
                     </div>
                 </form>
 
-                    <div class="login-footer">
-                        <p>Don't have an account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register</a></p>
-                    </div>
-                
+                <div class="login-footer">
+                    <p>Don't have an account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register</a></p>
+                </div>
+
             </div>
         </div>
     </div>
@@ -70,5 +70,13 @@
             });
         });
     </script>
+    <script src="~/bolt/js/alert-system.js"></script>
+    <script>       
+        @if (TempData["ToastError"] != null)
+        {
+            <text>toastError("@TempData["ToastError"]");</text>
+        }
+    </script>
+
 </body>
 </html>

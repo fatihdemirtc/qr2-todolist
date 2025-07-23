@@ -16,8 +16,8 @@
         <div class="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
-                    <img src="/logo.png" alt="PlumGift Logo">
-                    <span>PlumGift</span>
+                    <img src="/logo.png" alt="QrStyle Logo">
+                    <span>QrStyle</span>
                 </div>
             </div>
             <nav class="sidebar-nav">
@@ -58,13 +58,13 @@
                         @{
                             var currentCulture = CultureInfo.CurrentUICulture.Name;
                         }
-                        <select class="language-select name="culture" onchange="this.form.submit();">
+                  @*       <select class="language-select name="culture" onchange="this.form.submit();">
                             <option value="en" selected="@(currentCulture == "en")">English</option>
                             <option value="de" selected="@(currentCulture == "de")">Deutsch</option>
                             <option value="fr" selected="@(currentCulture == "fr")">Français</option>
                             <option value="es" selected="@(currentCulture == "es")">Español</option>
                             <option value="tr" selected="@(currentCulture == "tr")">Türkçe</option>
-                        </select>
+                        </select> *@
                         <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
                     </form>
                     <div class="profile-dropdown">
@@ -79,7 +79,7 @@
                         </button>
                         <div class="profile-menu">
                             <a href="#"><i class="fas fa-user"></i> Profile</a>
-                            <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="/Settings"><i class="fas fa-cog"></i> Settings</a>
                             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
                                 <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
                             </form>

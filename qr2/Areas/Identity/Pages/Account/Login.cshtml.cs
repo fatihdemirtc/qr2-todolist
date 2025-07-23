@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace qr2.Areas.Identity.Pages.Account
@@ -161,14 +162,61 @@ namespace qr2.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return Page();
+                    TempData["ToastError"] = "Invalid login attempt.";
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
             }
 
             // If we got this far, something failed, redisplay form
             return Page();
         }
+
+        public IActionResult OnPostExternalLogin(string provider, string returnUrl = null)
+        {
+            var redirectUrl = Url.Page("./Login", pageHandler: "Callback", values: new { returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, properties);
+        }
+
+        public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
+        {
+            returnUrl ??= Url.Content("~/");
+
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty, $"External provider error: {remoteError}");
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
+
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("{Name} logged in with {LoginProvider}.", info.Principal.Identity.Name, info.LoginProvider);
+                return LocalRedirect(returnUrl);
+            }
+
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            if (email != null)
+            {
+                var user = new ApplicationUser { UserName = email, Email = email };
+                var createResult = await _userManager.CreateAsync(user);
+                if (createResult.Succeeded)
+                {
+                    await _userManager.AddLoginAsync(user, info);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return LocalRedirect(returnUrl);
+                }
+            }
+
+            return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+        }
+
 
         private async Task<bool> IsRecaptchaValid(string token)
         {

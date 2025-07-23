@@ -456,7 +456,8 @@ function initializeModals() {
                             // Show social media modal
                             showSocialMediaModal(productNumber);
                         } else {
-                            showInfo(data.message);
+                            showInfo(data.error);
+                            closeAddProductModal();
                         }
                     })
                     .catch(err => {

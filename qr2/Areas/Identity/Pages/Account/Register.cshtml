@@ -61,5 +61,13 @@
             </div>
         </div>
     </div>
+    <script src="~/bolt/js/alert-system.js"></script>
+    <script>
+
+        @if (TempData["ToastError"] != null)
+        {
+                <text>toastError("@TempData["ToastError"]");</text>
+        }
+    </script>
 </body>
 </html>

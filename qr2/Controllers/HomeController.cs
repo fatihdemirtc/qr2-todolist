@@ -101,15 +101,15 @@ namespace qr2.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var userId = _userManager.GetUserId(User);
-
             // Ürün var mý?
             var product = await _context.Products
                 .FirstOrDefaultAsync(p => p.ProductNo == model.ProductNo && p.ProductPassword == model.ProductPassword);
             if (product == null)
             {
-                return Json(new { success = false, error = "ProductionNotFound" });
+                return Json(new { success = false, error = "Check your ProductNo or Password" });
             }
+
+            var userId = _userManager.GetUserId(User);
 
             // Kullanýcý bu ürünü daha önce eklemiþ mi?
             var exists = await _context.UserProduct
