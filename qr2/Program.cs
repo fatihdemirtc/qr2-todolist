@@ -56,6 +56,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 var app = builder.Build();
 app.UseForwardedHeaders();
 app.UseMiddleware<ExceptionLoggingMiddleware>();
+
 app.UseHttpsRedirection();
 // Middleware pipeline
 
