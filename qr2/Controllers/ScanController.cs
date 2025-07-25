@@ -32,7 +32,7 @@ namespace qr2.Controllers
             long.TryParse(idStr, out id);
 
             Product a = _context.Products.FirstOrDefault(x => x.ProductNo == id);
-            if (a == null || a.QrContext==null)
+            if (a == null || string.IsNullOrEmpty(a.QrContext))
             {
                 return Redirect("https://www.youtube.com/shorts/LWSNgcvlEYQ");
             }
