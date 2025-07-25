@@ -4,5 +4,6 @@
     {        
         Tshirt_Man = 1,
         Tshirt_Woman = 2,
+        Canvas = 3,
     }
 }
