@@ -12,23 +12,23 @@ using UAParser;
 
 namespace qr2.Controllers
 {
-    public class ScanController : Controller
+    public class SController : Controller
     {
         private readonly HttpClient _httpClient;
         private const string ApiKey = "c880a64ef2ef97b32bd154fc8810dea6";
         private readonly AppDbContext _context;
 
-        public ScanController(AppDbContext context, HttpClient httpClient)
+        public SController(AppDbContext context, HttpClient httpClient)
 
         {
             _context = context;
             _httpClient = httpClient;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> I()
         {
             long id = 0;
-            string idStr = Request.Query["productId"];
+            string idStr = Request.Query["no"];
             long.TryParse(idStr, out id);
 
             Product a = _context.Products.FirstOrDefault(x => x.ProductNo == id);
