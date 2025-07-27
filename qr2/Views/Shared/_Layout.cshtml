@@ -6,7 +6,23 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - qr2</title>
+    <title>@ViewData["Title"] - QRStyle</title>
+    <!-- Favicon ICO -->
+    <link rel="icon" type="image/x-icon" href="~/fav/favicon.ico">
+
+    <!-- PNG faviconlar -->
+    <link rel="icon" type="image/png" sizes="16x16" href="~/fav/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/fav/favicon-32x32.png">
+
+    <!-- Apple cihazlar -->
+    <link rel="apple-touch-icon" sizes="180x180" href="~/fav/apple-touch-icon.png">
+
+    <!-- Android cihazlar -->
+    <link rel="icon" type="image/png" sizes="192x192" href="~/fav/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="~/fav/android-chrome-512x512.png">
+
+    <!-- Manifest -->
+    <link rel="manifest" href="~/fav/site.webmanifest">
     <script type="importmap"></script>
     <link rel="stylesheet" href="/bolt/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -14,12 +30,14 @@
 <body>
     <div class="dashboard-container">
         <div class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <img src="/logo.png" alt="QrStyle Logo">
-                    <span>QrStyle</span>
+            <a href="/" style="text-decoration: none; color: inherit;">
+                <div class="sidebar-header">
+                    <div class="logo">
+                        <img src="/logo.png" alt="QrStyle Logo">
+                        <span>QrStyle</span>
+                    </div>
                 </div>
-            </div>
+            </a>
             <nav class="sidebar-nav">
                 <ul>
                     @if (User.IsInRole("admin"))
@@ -58,7 +76,7 @@
                         @{
                             var currentCulture = CultureInfo.CurrentUICulture.Name;
                         }
-                  @*       <select class="language-select name="culture" onchange="this.form.submit();">
+                        @*       <select class="language-select name="culture" onchange="this.form.submit();">
                             <option value="en" selected="@(currentCulture == "en")">English</option>
                             <option value="de" selected="@(currentCulture == "de")">Deutsch</option>
                             <option value="fr" selected="@(currentCulture == "fr")">Français</option>
@@ -94,35 +112,35 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-apped-version="true"></script>
-   @*  <script src="~/bolt/script.js"></script> *@
+    @*  <script src="~/bolt/script.js"></script> *@
     <script>
         @if (TempData["ToastSuccess"] != null)
         {
-                <text>toastSuccess("@TempData["ToastSuccess"]");</text>
+                    <text>toastSuccess("@TempData["ToastSuccess"]");</text>
         }
         @if (TempData["ToastError"] != null)
         {
-                <text>toastError("@TempData["ToastError"]");</text>
+                    <text>toastError("@TempData["ToastError"]");</text>
         }
          @if (TempData["ToastWarning"] != null)
         {
-                <text>toastWarning("@TempData["ToastWarning"]");</text>
+                    <text>toastWarning("@TempData["ToastWarning"]");</text>
         }
         @if (TempData["AlertSuccess"] != null)
         {
-                <text>showSuccess("@TempData["AlertSuccess"]");</text>
+                    <text>showSuccess("@TempData["AlertSuccess"]");</text>
         }
         @if (TempData["AlertError"] != null)
         {
-                <text>showError("@TempData["AlertError"]");</text>
+                    <text>showError("@TempData["AlertError"]");</text>
         }
         @if (TempData["AlertWarning"] != null)
         {
-               <text>showWarning("@TempData["AlertWarning"]");</text>
+                   <text>showWarning("@TempData["AlertWarning"]");</text>
         }
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
-    
+
 </body>
 </html>

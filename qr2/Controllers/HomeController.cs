@@ -27,11 +27,11 @@ namespace qr2.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.ShowBackButton = false;
-            ViewBag.PageTitle = "Dashboard";
+            ViewBag.PageTitle = "My QRStyles";
 
             var userId = _userManager.GetUserId(User);
             var userProducts = await _context.UserProduct
-                .Include(up => up.Product)
+                .Include(up => up.Product).ThenInclude(x=>x.Scans)                
                 .Where(up => up.UserId == userId)
                 .Select(up => up.Product)
                 .ToListAsync();
@@ -43,7 +43,7 @@ namespace qr2.Controllers
         {
             ViewBag.ShowBackButton = true;
             ViewBag.BackUrl = "/Home/Index";
-            ViewBag.PageTitle = "Product Detail";
+            ViewBag.PageTitle = "QrStyle Detail";
 
             var detail = await _context.Products
          .Include(p => p.Scans)
