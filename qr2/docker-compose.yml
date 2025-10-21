@@ -6,7 +6,7 @@ services:
     container_name: db
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Fatih_QRSTYLE.11**
+      POSTGRES_PASSWORD: ******
       POSTGRES_DB: mydb
     ports:
       - "5432:5432"
@@ -25,7 +25,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_URLS: http://+:8080
-      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=mydb;Username=postgres;Password=Fatih_QRSTYLE.11**"
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=mydb;Username=postgres;Password=******"
     ports:
       - "5000:8080"
     depends_on:
